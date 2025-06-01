@@ -1,10 +1,14 @@
-import logo from '../assets/oppai_logo.svg'
+import logo from "../assets/oppai_logo.svg";
 
-function Footer(){
-  return(
+function Footer() {
+  return (
     <footer className="bg-slate-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto text-center">
-        <img src={logo} alt='logo' className="text-3xl font-bold mb-8 b mx-auto h-14 text-transparent" />
+        <img
+          src={logo}
+          alt="logo"
+          className="text-3xl font-bold mb-8 b mx-auto h-14 text-transparent"
+        />
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <h4 className="font-semibold text-white mb-4">Produit</h4>
@@ -44,7 +48,7 @@ function Footer(){
         </div>
       </div>
     </footer>
-  )
+  );
 }
 
-export default Footer
+export default Footer;

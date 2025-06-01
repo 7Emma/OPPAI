@@ -1,5 +1,5 @@
-import React from 'react';
-import { services} from '../Datas/services';
+import React from "react";
+import { services } from "../Datas/services";
 
 const ServicesSection = () => {
   return (
@@ -14,8 +14,13 @@ const ServicesSection = () => {
             return (
               <div key={index} className="text-center group">
                 <div className="bg-gradient-to-r from-coral/20 to-turquoise/20 rounded-2xl p-8 border border-turquoise/20 hover:border-coral/50 transition-all duration-300 hover:shadow-lg hover:shadow-turquoise/10 group-hover:from-coral/30 group-hover:to-turquoise/30">
-                  <IconComponent size={48} className="text-turquoise mx-auto mb-4 group-hover:scale-110 group-hover:text-coral transition-all duration-300" />
-                  <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
+                  <IconComponent
+                    size={48}
+                    className="text-turquoise mx-auto mb-4 group-hover:scale-110 group-hover:text-coral transition-all duration-300"
+                  />
+                  <h3 className="text-xl font-bold text-white mb-3">
+                    {service.title}
+                  </h3>
                   <p className="text-turquoise-light text-sm">{service.desc}</p>
                 </div>
               </div>
