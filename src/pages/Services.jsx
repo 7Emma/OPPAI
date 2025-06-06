@@ -3,9 +3,9 @@ import { services } from "../Datas/services";
 
 const ServicesSection = () => {
   return (
-    <section id="services" className="py-20 px-4">
+    <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-5xl font-bold text-center mb-16 bg-gradient-to-r from-coral to-turquoise bg-clip-text text-transparent">
+        <h2 className="text-5xl font-bold text-center mb-16 mt-10 animate-pulse bg-gradient-to-r from-coral to-turquoise bg-clip-text text-transparent">
           &lt;Nos Services/&gt;
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">

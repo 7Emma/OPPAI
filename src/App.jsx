@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Import des composants
-import Navigation from "./components/Header";
+// Import des components
+import NavBar from "./components/Header";
 import HeroSection from "./pages/HeroSection";
-import AboutSection from "./pages/About";
-import ProjectsSection from "./pages/Projects";
-import ServicesSection from "./pages/Services";
-import TeamSection from "./pages/Team";
-import ContactSection from "./pages/Contact";
+import About from "./pages/About";
+import Projects from "./pages/Projects";
+import Services from "./pages/Services";
+import Team from "./pages/Team";
+import Contact from "./pages/Contact";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import New from "./pages/Blog/New";
+import Personal from "./pages/Blog/Personal";
+//import Blog from "./pages/Blog";
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,7 +35,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-800 text-white">
       <Router>
-        <Navigation
+        <NavBar
           isScrolled={isScrolled}
           scrollToSection={scrollToSection}
           activeSection={activeSection}
@@ -43,11 +46,14 @@ function App() {
             path="hero"
             element={<HeroSection scrollToSection={scrollToSection} />}
           ></Route>
-          <Route path="about" element={<AboutSection />}></Route>
-          <Route path="projects" element={<ProjectsSection />}></Route>
-          <Route path="services" element={<ServicesSection />}></Route>
-          <Route path="team" element={<TeamSection />}></Route>
-          <Route path="contact" element={<ContactSection />}></Route>
+          <Route path="about" element={<About />}></Route>
+          <Route path="projects" element={<Projects />}></Route>
+          <Route path="services" element={<Services />}></Route>
+          <Route path="team" element={<Team />}></Route>
+          <Route path="contact" element={<Contact />}></Route>
+          {/**<Route path="blog" element={<Blog />}></Route>*/}
+          <Route path="blog/new" element={<New />}></Route>
+          <Route path="blog/personal" element={<Personal />}></Route>
         </Routes>
         <Footer />
       </Router>

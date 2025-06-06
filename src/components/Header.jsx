@@ -84,19 +84,19 @@ const Navbar = () => {
 
             {/* Blog avec sous-menu */}
             <div className="relative group">
-              <Link
+              <button
                 to="/blog"
                 className="px-3 py-2 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300 flex items-center space-x-1"
               >
                 <span>Blog</span>
                 <ChevronDown className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
-              </Link>
+              </button>
 
               {/* Sous-menu Desktop */}
               <div className="absolute left-0 mt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                 <div className="bg-white rounded-xl shadow-xl border border-gray-100 py-2 overflow-hidden">
                   <Link
-                    to="/blog/news"
+                    to="/blog/new"
                     className="block px-4 py-3 text-sm text-gray-700 hover:text-turquoise hover:bg-turquoise/5 transition-all duration-200 border-l-4 border-transparent hover:border-turquoise"
                   >
                     <div className="font-medium">Actualités</div>
@@ -199,14 +199,14 @@ const Navbar = () => {
                 }`}
               >
                 <Link
-                  to="/blog/news"
+                  to="new"
                   onClick={closeMenu}
                   className="block px-4 py-2 text-sm text-gray-700 hover:text-turquoise hover:bg-turquoise/5 rounded-lg transition-all duration-200"
                 >
                   Actualités
                 </Link>
                 <Link
-                  to="/blog/personal"
+                  to="personal"
                   onClick={closeMenu}
                   className="block px-4 py-2 text-sm text-gray-700 hover:text-turquoise hover:bg-turquoise/5 rounded-lg transition-all duration-200"
                 >

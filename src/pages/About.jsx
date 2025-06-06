@@ -3,9 +3,9 @@ import { Users, GitBranch, Zap } from 'lucide-react';
 
 const AboutSection = () => {
   return (
-    <section id="apropos" className="py-20 px-4">
+    <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-5xl font-bold text-center mb-16 bg-gradient-to-r from-coral to-turquoise bg-clip-text text-transparent">
+        <h2 className="text-5xl font-bold text-center mb-16 mt-10 animate-pulse bg-gradient-to-r from-coral to-turquoise bg-clip-text text-transparent">
           &lt;À Propos/&gt;
         </h2>
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -14,7 +14,7 @@ const AboutSection = () => {
               OPPAI est un collectif de développeurs passionnés, unis par l'amour du code propre et de l'innovation technologique. Nous sommes une communauté dynamique de plus de 50 programmeurs talentueux.
             </p>
             <p className="text-lg text-turquoise leading-relaxed">
-              Depuis 2020, nous développons des solutions logicielles innovantes, partageons nos connaissances et repoussons les limites de ce qui est possible avec le code. De l'IA au développement web, en passant par la cybersécurité et les systèmes distribués.
+              Depuis 2023, nous développons des solutions logicielles innovantes, partageons nos connaissances et repoussons les limites de ce qui est possible avec le code. De l'IA au développement web, en passant par la cybersécurité et les systèmes distribués.
             </p>
             <div className="bg-slate-800/50 rounded-xl p-6 border border-turquoise/30">
               <div className="text-coral font-mono text-sm mb-4">// Notre ADN</div>
@@ -32,7 +32,7 @@ const AboutSection = () => {
                 <div className="bg-gradient-to-r from-coral to-turquoise w-16 h-16 rounded-full flex items-center justify-center mb-2 mx-auto text-white">
                   <Users size={24} />
                 </div>
-                <p className="text-sm text-turquoise">50+ Devs</p>
+                <p className="text-sm text-turquoise">10+ Devs</p>
               </div>
               <div className="text-center">
                 <div className="bg-gradient-to-r from-coral to-turquoise w-16 h-16 rounded-full flex items-center justify-center mb-2 mx-auto text-white">
@@ -57,15 +57,15 @@ const AboutSection = () => {
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-turquoise rounded-full animate-pulse"></div>
-                  <span className="text-turquoise">Formation: 2020</span>
+                  <span className="text-turquoise">Formation: 2023</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-coral rounded-full animate-pulse"></div>
-                  <span className="text-turquoise">Origine: France</span>
+                  <span className="text-turquoise">Origine: Bénin</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-turquoise rounded-full animate-pulse"></div>
-                  <span className="text-turquoise">Développeurs: 50+ membres actifs</span>
+                  <span className="text-turquoise">Développeurs: 10+ membres actifs</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-coral rounded-full animate-pulse"></div>
