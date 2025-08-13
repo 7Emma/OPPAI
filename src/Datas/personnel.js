@@ -158,15 +158,7 @@ const teamMembers = [
     icon: Monitor,
     gradient: "from-teal-400 to-cyan-600",
   },
-  {/*
-    id: 7,
-    name: "Billa ASSUMA",
-    role: "Full-Stack Developer",
-    avatar: billa,
-    technologies: ["Python", "Django", "C++/C", "React", "JavaSCript"],
-    speciality: "Full-Stack & Web Application",
-
-  */},
+ 
 ];
 
 export default teamMembers;
