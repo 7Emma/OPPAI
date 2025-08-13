@@ -3,7 +3,7 @@ import { Users, GitBranch, Zap } from 'lucide-react';
 
 const AboutSection = () => {
   return (
-    <section className="py-20 px-4">
+    <section id='about' className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-5xl font-bold text-center mb-16 mt-10 animate-pulse bg-gradient-to-r from-coral to-turquoise bg-clip-text text-transparent">
           &lt;À Propos/&gt;

@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Menu, X, ChevronDown, Home } from "lucide-react";
 import logo from "../assets/oppai_logo.svg";
-import { Link } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
 
-const Navbar = () => {
+const Navbar = ({
+  scrollToSection,
+  activeSection,
+  isScrolled,
+  isBlogPage = false,
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isBlogOpen, setIsBlogOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Effet de scroll pour changer l'apparence de la navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Fermer le menu mobile lors du redimensionnement
+  // Fermeture automatique du menu mobile lors du redimensionnement
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -29,121 +26,158 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    setIsBlogOpen(false);
-  };
+  // Fermeture du dropdown blog lors du clic ailleurs
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isBlogOpen && !event.target.closest(".blog-dropdown")) {
+        setIsBlogOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [isBlogOpen]);
 
-  const toggleBlogSubmenu = () => {
-    setIsBlogOpen(!isBlogOpen);
-  };
-
-  const closeMenu = () => {
+  // Fonction pour gérer la navigation vers l'accueil avec scroll
+  const handleHomeNavigation = (sectionId = "hero") => {
+    if (location.pathname === "/") {
+      // Si on est déjà sur la page d'accueil, on scroll vers la section
+      scrollToSection && scrollToSection(sectionId);
+    } else {
+      // Si on est sur une autre page, on navigue vers l'accueil puis on scroll
+      navigate("/");
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    }
     setIsMenuOpen(false);
     setIsBlogOpen(false);
   };
 
+  const handleNavClick = (sectionId) => {
+    handleHomeNavigation(sectionId);
+  };
+
+  const navItems = [
+    { id: "hero", label: "Accueil" },
+    { id: "about", label: "À propos" },
+    { id: "projects", label: "Projets" },
+    { id: "services", label: "Services" },
+  ];
+
+  const blogItems = [
+    { path: "/new", label: "Actualités" },
+    { path: "/personal", label: "Personnel" },
+  ];
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
+        isScrolled || isBlogPage
           ? "bg-white/95 backdrop-blur-md shadow-lg"
           : "bg-white shadow-md"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
-          <Link
-            to="/"
+          <button
+            onClick={() => handleHomeNavigation("hero")}
             className="flex items-center space-x-2 group"
-            onClick={closeMenu}
           >
             <img
               src={logo}
               alt="logo"
-              className="text-3xl font-bold mb-8 b mx-auto h-16 text-transparent"
+              className="h-12 transition-transform duration-300 group-hover:scale-105"
             />
-          </Link>
+          </button>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            <Link
-              to="/"
-              className="px-3 py-2 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
-            >
-              Accueil
-            </Link>
-
-            <Link
-              to="/about"
-              className="px-3 py-2 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
-            >
-              À propos
-            </Link>
-
-            {/* Blog avec sous-menu */}
-            <div className="relative group">
+          {/* Desktop menu */}
+          <div className="hidden md:flex items-center space-x-2">
+            {/* Bouton Home pour les pages blog */}
+            {isBlogPage && (
               <button
-                to="/blog"
-                className="px-3 py-2 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300 flex items-center space-x-1"
+                onClick={() => handleHomeNavigation("hero")}
+                className="px-3 py-2 rounded-lg font-medium flex items-center space-x-2 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 transition-all duration-300"
+              >
+                <Home className="w-4 h-4" />
+                <span>Accueil</span>
+              </button>
+            )}
+
+            {/* Navigation principale */}
+            {!isBlogPage &&
+              navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item.id)}
+                  className={`px-3 py-2 rounded-lg font-medium transition-all duration-300 ${
+                    activeSection === item.id
+                      ? "text-turquoise-dark bg-turquoise/20"
+                      : "text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+
+            {/* Blog dropdown */}
+            <div className="relative blog-dropdown">
+              <button
+                onClick={() => setIsBlogOpen(!isBlogOpen)}
+                className={`px-3 py-2 rounded-lg font-medium flex items-center space-x-1 transition-all duration-300 ${
+                  location.pathname.startsWith("/new") ||
+                  location.pathname.startsWith("/personal")
+                    ? "text-turquoise-dark bg-turquoise/20"
+                    : "text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10"
+                }`}
               >
                 <span>Blog</span>
-                <ChevronDown className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-300 ${
+                    isBlogOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
 
-              {/* Sous-menu Desktop */}
-              <div className="absolute left-0 mt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                <div className="bg-white rounded-xl shadow-xl border border-gray-100 py-2 overflow-hidden">
-                  <Link
-                    to="/blog/new"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:text-turquoise hover:bg-turquoise/5 transition-all duration-200 border-l-4 border-transparent hover:border-turquoise"
-                  >
-                    <div className="font-medium">Actualités</div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Dernières nouvelles tech
-                    </div>
-                  </Link>
-                  <Link
-                    to="/blog/personal"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:text-turquoise hover:bg-turquoise/5 transition-all duration-200 border-l-4 border-transparent hover:border-turquoise"
-                  >
-                    <div className="font-medium">Personnel</div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Réflexions et insights
-                    </div>
-                  </Link>
+              {isBlogOpen && (
+                <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg border rounded-xl z-10 py-2 animate-fade-in">
+                  {blogItems.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => {
+                        setIsBlogOpen(false);
+                        setIsMenuOpen(false);
+                      }}
+                      className={`block px-4 py-2 text-sm rounded-lg mx-2 transition-all duration-200 ${
+                        location.pathname === item.path
+                          ? "text-turquoise-dark bg-turquoise/10"
+                          : "text-gray-700 hover:bg-turquoise/5 hover:text-turquoise"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
 
-            <Link
-              to="/services"
-              className="px-3 py-2 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
-            >
-              Services
-            </Link>
-
-            <Link
-              to="/projects"
-              className="px-3 py-2 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
-            >
-              Projets
-            </Link>
-
-            <Link
-              to="/contact"
-              className="ml-2 px-4 py-2 bg-gradient-to-r from-coral to-coral-dark text-white rounded-lg font-medium hover:from-coral-dark hover:to-coral transform hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg"
+            {/* Contact button */}
+            <button
+              onClick={() => handleNavClick("contact")}
+              className="ml-2 px-4 py-2 bg-gradient-to-r from-coral to-coral-dark text-white rounded-lg font-medium hover:from-coral-dark hover:to-coral transform hover:scale-105 transition-all duration-300 shadow-md"
             >
               Contact
-            </Link>
+            </button>
           </div>
 
           {/* Mobile menu button */}
           <button
-            onClick={toggleMenu}
-            className="md:hidden p-2 rounded-lg text-turquoise hover:bg-turquoise/10 transition-all duration-300"
-            aria-label="Toggle menu"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 rounded-lg text-turquoise hover:bg-turquoise/10 transition-all duration-200"
           >
             {isMenuOpen ? (
               <X className="w-6 h-6" />
@@ -162,27 +196,43 @@ const Navbar = () => {
       >
         <div className="bg-white/95 backdrop-blur-md border-t border-gray-100">
           <div className="px-4 py-4 space-y-2">
-            <Link
-              to="/"
-              onClick={closeMenu}
-              className="block px-4 py-3 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
-            >
-              Accueil
-            </Link>
+            {/* Home button pour mobile sur les pages blog */}
+            {isBlogPage && (
+              <button
+                onClick={() => handleHomeNavigation("hero")}
+                className="flex items-center space-x-2 w-full text-left px-4 py-2 rounded-lg text-turquoise hover:bg-turquoise/10 transition-all duration-200"
+              >
+                <Home className="w-4 h-4" />
+                <span>Accueil</span>
+              </button>
+            )}
 
-            <Link
-              to="/about"
-              onClick={closeMenu}
-              className="block px-4 py-3 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
-            >
-              À propos
-            </Link>
+            {/* Navigation principale mobile */}
+            {!isBlogPage &&
+              navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item.id)}
+                  className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
+                    activeSection === item.id
+                      ? "text-turquoise-dark bg-turquoise/20"
+                      : "text-turquoise hover:bg-turquoise/10"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
 
-            {/* Blog Mobile */}
+            {/* Blog mobile */}
             <div>
               <button
-                onClick={toggleBlogSubmenu}
-                className="w-full flex items-center justify-between px-4 py-3 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
+                onClick={() => setIsBlogOpen(!isBlogOpen)}
+                className={`w-full flex justify-between items-center px-4 py-2 rounded-lg transition-all duration-200 ${
+                  location.pathname.startsWith("/new") ||
+                  location.pathname.startsWith("/personal")
+                    ? "text-turquoise-dark bg-turquoise/20"
+                    : "text-turquoise hover:bg-turquoise/10"
+                }`}
               >
                 <span>Blog</span>
                 <ChevronDown
@@ -192,52 +242,40 @@ const Navbar = () => {
                 />
               </button>
 
-              {/* Sous-menu Mobile */}
               <div
-                className={`ml-4 mt-2 space-y-1 transition-all duration-300 overflow-hidden ${
+                className={`overflow-hidden transition-all duration-300 ${
                   isBlogOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
                 }`}
               >
-                <Link
-                  to="new"
-                  onClick={closeMenu}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:text-turquoise hover:bg-turquoise/5 rounded-lg transition-all duration-200"
-                >
-                  Actualités
-                </Link>
-                <Link
-                  to="personal"
-                  onClick={closeMenu}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:text-turquoise hover:bg-turquoise/5 rounded-lg transition-all duration-200"
-                >
-                  Personnel
-                </Link>
+                <div className="ml-4 mt-1 space-y-1">
+                  {blogItems.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsBlogOpen(false);
+                      }}
+                      className={`block px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
+                        location.pathname === item.path
+                          ? "text-turquoise-dark bg-turquoise/10"
+                          : "text-gray-700 hover:bg-turquoise/10"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <Link
-              to="/services"
-              onClick={closeMenu}
-              className="block px-4 py-3 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
-            >
-              Services
-            </Link>
-
-            <Link
-              to="/projects"
-              onClick={closeMenu}
-              className="block px-4 py-3 text-turquoise hover:text-turquoise-dark hover:bg-turquoise/10 rounded-lg font-medium transition-all duration-300"
-            >
-              Projets
-            </Link>
-
-            <Link
-              to="/contact"
-              onClick={closeMenu}
-              className="block mx-4 mt-4 px-4 py-3 bg-gradient-to-r from-coral to-coral-dark text-white text-center rounded-lg font-medium hover:from-coral-dark hover:to-coral transition-all duration-300 shadow-md"
+            {/* Contact button mobile */}
+            <button
+              onClick={() => handleNavClick("contact")}
+              className="block w-full text-center mt-4 px-4 py-3 bg-gradient-to-r from-coral to-coral-dark text-white rounded-lg font-medium transition-all duration-300 shadow-md"
             >
               Contact
-            </Link>
+            </button>
           </div>
         </div>
       </div>

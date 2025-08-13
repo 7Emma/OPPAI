@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Code, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const HeroSection = ({ scrollToSection }) => {
   const [currentWelcomeIndex, setCurrentWelcomeIndex] = useState(0);
@@ -30,7 +29,7 @@ const HeroSection = ({ scrollToSection }) => {
   }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section id='hero' className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-turquoise/20 to-coral/20 animate-pulse"></div>
 
       <div className="absolute inset-0">
@@ -90,20 +89,20 @@ const HeroSection = ({ scrollToSection }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            to="/projects"
+          <a
+            href="#projects"
             className="w-full sm:w-auto bg-gradient-to-r from-turquoise to-coral px-8 py-4 rounded-full text-lg font-semibold hover:from-turquoise-dark hover:to-coral-dark transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-turquoise/25 flex items-center justify-center"
           >
             <Code className="inline-block mr-2 animate-bounce-slow" size={20} />
             Voir nos Projets
-          </Link>
-          <Link
-            to="/contact"
+          </a>
+          <a
+            href="#contact"
             className="w-full sm:w-auto border-2 border-coral px-8 py-4 rounded-full text-lg font-semibold hover:bg-coral hover:text-white transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
           >
             Nous Rejoindre
             <ChevronDown className="ml-2 animate-bounce" size={20} />
-          </Link>
+          </a>
         </div>
 
         <div className="mt-16 animate-bounce">
@@ -115,7 +114,7 @@ const HeroSection = ({ scrollToSection }) => {
         </div>
       </div>
 
-      <style jsx="true">{`
+      <style jsx="true" >{`
         @keyframes float {
           0% {
             transform: translateY(0) translateX(0);
