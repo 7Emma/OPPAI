@@ -15,14 +15,9 @@ import {
 import bhilal from "../assets/imges/bhilal.jpeg";
 import david from "../assets/imges/david.jpeg";
 import eddy from "../assets/imges/eddy.jpeg";
-import billa from "../assets/imges/billa.jpeg";
 import jp from "../assets/imges/jp.jpeg";
-import leroy from "../assets/imges/leroy.jpeg";
 import marcos from "../assets/imges/macos.jpeg";
-import jolidon from "../assets/imges/jolidon.jpeg";
-import hesed from "../assets/imges/hesed.jpeg";
 import emma from "../assets/imges/emma.jpeg";
-
 
 // Données de l'équipe
 const teamMembers = [
@@ -30,7 +25,7 @@ const teamMembers = [
     id: 1,
     name: "Eddy BONI",
     role: "Software Engineer",
-    avatar: eddy,
+    image: eddy,
     technologies: ["Java", "Django", "HTML/CSS", "JavaScript", "C++/C"],
     speciality: "Full-Stack Development",
     description:
@@ -48,7 +43,7 @@ const teamMembers = [
     id: 2,
     name: "Emmanuel AGBOTOEDO",
     role: "Data Engineer",
-    avatar: emma,
+    image: emma,
     technologies: ["React", "Node.js", "Java", "Python", "C++", "Scala"],
     speciality: "Data Engineering & Analytics",
     description:
@@ -66,7 +61,7 @@ const teamMembers = [
     id: 3,
     name: "David IDOHOU",
     role: "Développeur Full Stack & Ingénieur IA",
-    avatar: david,
+    image: david,
     technologies: [
       "Python",
       "Django",
@@ -91,7 +86,7 @@ const teamMembers = [
     id: 4,
     name: "Jean-Paul GNIKPO",
     role: "Fullstack Developer",
-    avatar: jp,
+    image: jp,
     technologies: ["PHP", "Laravel", "React", "C/C++", "Firebase"],
     speciality: "Web Development & Backend",
     description:
@@ -109,7 +104,7 @@ const teamMembers = [
     id: 5,
     name: "Marcos BATAMOUSSI",
     role: "DevOps Engineer",
-    avatar: marcos,
+    image: marcos,
     technologies: [
       "Docker",
       "Kubernetes",
@@ -134,7 +129,7 @@ const teamMembers = [
     id: 6,
     name: "Bhilal CHITOU",
     role: "Full-Stack Developer",
-    avatar: bhilal,
+    image: bhilal,
     technologies: [
       "Vue.js",
       "Laravel",
@@ -158,7 +153,6 @@ const teamMembers = [
     icon: Monitor,
     gradient: "from-teal-400 to-cyan-600",
   },
- 
 ];
 
 export default teamMembers;

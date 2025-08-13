@@ -11,7 +11,7 @@ const AboutSection = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <p className="text-lg text-turquoise leading-relaxed">
-              OPPAI est un collectif de développeurs passionnés, unis par l'amour du code propre et de l'innovation technologique. Nous sommes une communauté dynamique de plus de 50 programmeurs talentueux.
+              OPPAI est un collectif de développeurs passionnés, unis par l'amour du code propre et de l'innovation technologique. Nous sommes une communauté dynamique de plus de 10 programmeurs talentueux.
             </p>
             <p className="text-lg text-turquoise leading-relaxed">
               Depuis 2023, nous développons des solutions logicielles innovantes, partageons nos connaissances et repoussons les limites de ce qui est possible avec le code. De l'IA au développement web, en passant par la cybersécurité et les systèmes distribués.

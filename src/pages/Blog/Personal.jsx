@@ -15,6 +15,7 @@ import {
   Users,
 } from "lucide-react";
 import teamMembers from "../../Datas/personnel";
+import { Link } from "react-router-dom";
 
 const Personal = () => {
   const [selectedMember, setSelectedMember] = useState(null);
@@ -131,7 +132,7 @@ const Personal = () => {
                     <div className="relative inline-block">
                       <div className="w-24 h-24 mx-auto mb-4 relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                         <img
-                          src={member.avatar}
+                          src={member.image}
                           alt={member.name}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                           onError={(e) => {
@@ -264,9 +265,29 @@ const Personal = () => {
             notre équipe d'experts peut transformer vos idées en réalité
             technologique.
           </p>
-          <button className="px-8 py-3 bg-gradient-to-r from-coral to-coral-dark text-white rounded-lg font-medium hover:from-coral-dark hover:to-coral transform hover:scale-105 transition-all duration-300 shadow-lg">
+
+          <a
+            href="https://wa.me/2290191732432?text=Bonjour%2C%20je%20souhaite%20d%C3%A9marrer%20un%20projet%20avec%20vous"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-8 py-3 bg-gradient-to-r from-coral to-coral-dark text-white rounded-lg font-medium hover:from-coral-dark hover:to-coral transform hover:scale-105 transition-all duration-300 shadow-lg"
+          >
             Démarrer un projet
-          </button>
+          </a>
+        </div>
+        {/**Pour ajouter les infos */}
+        <div className="text-center p-6 bg-slate-800 rounded-lg shadow-lg">
+          <p className="mb-4 text-white">
+            Vous appartenez à la team{" "}
+            <span className="text-coral font-semibold">OPPAI</span> ? Ajoutez ou
+            modifiez vos informations !
+          </p>
+          <Link
+            to="/dashboard"
+            className="inline-block px-6 py-2 bg-pink-300 hover:bg-coral text-white font-semibold rounded-lg transition-colors duration-300"
+          >
+            Ajouter
+          </Link>
         </div>
       </div>
     </div>
