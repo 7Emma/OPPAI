@@ -26,10 +26,14 @@ const Navbar = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Fermeture du dropdown blog lors du clic ailleurs
+  // Fermeture du dropdown blog lors du clic ailleurs (uniquement pour desktop)
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isBlogOpen && !event.target.closest(".blog-dropdown")) {
+      if (
+        isBlogOpen &&
+        !event.target.closest(".blog-dropdown") &&
+        window.innerWidth >= 768
+      ) {
         setIsBlogOpen(false);
       }
     };
@@ -196,37 +200,28 @@ const Navbar = ({
       >
         <div className="bg-white/95 backdrop-blur-md border-t border-gray-100">
           <div className="px-4 py-4 space-y-2">
-            {/* Home button pour mobile sur les pages blog */}
-            {isBlogPage && (
+            {/* Navigation principale mobile - TOUJOURS affichée */}
+            {navItems.map((item) => (
               <button
-                onClick={() => handleHomeNavigation("hero")}
-                className="flex items-center space-x-2 w-full text-left px-4 py-2 rounded-lg text-turquoise hover:bg-turquoise/10 transition-all duration-200"
+                key={item.id}
+                onClick={() => handleNavClick(item.id)}
+                className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
+                  activeSection === item.id
+                    ? "text-turquoise-dark bg-turquoise/20"
+                    : "text-turquoise hover:bg-turquoise/10"
+                }`}
               >
-                <Home className="w-4 h-4" />
-                <span>Accueil</span>
+                {item.label}
               </button>
-            )}
-
-            {/* Navigation principale mobile */}
-            {!isBlogPage &&
-              navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
-                    activeSection === item.id
-                      ? "text-turquoise-dark bg-turquoise/20"
-                      : "text-turquoise hover:bg-turquoise/10"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+            ))}
 
             {/* Blog mobile */}
             <div>
               <button
-                onClick={() => setIsBlogOpen(!isBlogOpen)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsBlogOpen(!isBlogOpen);
+                }}
                 className={`w-full flex justify-between items-center px-4 py-2 rounded-lg transition-all duration-200 ${
                   location.pathname.startsWith("/new") ||
                   location.pathname.startsWith("/personal")
@@ -242,12 +237,9 @@ const Navbar = ({
                 />
               </button>
 
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  isBlogOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
-                }`}
-              >
-                <div className="ml-4 mt-1 space-y-1">
+              {/* Sous-menu blog avec animation améliorée */}
+              {isBlogOpen && (
+                <div className="ml-4 mt-2 space-y-1 animate-fade-in">
                   {blogItems.map((item) => (
                     <Link
                       key={item.path}
@@ -258,15 +250,15 @@ const Navbar = ({
                       }}
                       className={`block px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
                         location.pathname === item.path
-                          ? "text-turquoise-dark bg-turquoise/10"
-                          : "text-gray-700 hover:bg-turquoise/10"
+                          ? "text-turquoise-dark bg-turquoise/20 font-medium"
+                          : "text-gray-700 hover:bg-turquoise/10 hover:text-turquoise"
                       }`}
                     >
                       {item.label}
                     </Link>
                   ))}
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Contact button mobile */}
