@@ -8,37 +8,40 @@ import {
   Globe,
   ChevronRight,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const AboutSection = () => {
   const [hoveredStat, setHoveredStat] = useState(null);
   const [typedText, setTypedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const values = useMemo(() => [
-  "Innovation continue",
-  "Code quality first",
-  "Open source mindset",
-  "Collaborative spirit",
-], []);
+  const values = useMemo(
+    () => [
+      "Innovation continue",
+      "Code quality first",
+      "Open source mindset",
+      "Collaborative spirit",
+    ],
+    []
+  );
 
-useEffect(() => {
-  const currentValue = values[currentIndex];
-  let timeoutId;
+  useEffect(() => {
+    const currentValue = values[currentIndex];
+    let timeoutId;
 
-  if (typedText.length < currentValue.length) {
-    timeoutId = setTimeout(() => {
-      setTypedText(currentValue.substring(0, typedText.length + 1));
-    }, 100);
-  } else {
-    timeoutId = setTimeout(() => {
-      setTypedText("");
-      setCurrentIndex((prev) => (prev + 1) % values.length);
-    }, 2000);
-  }
+    if (typedText.length < currentValue.length) {
+      timeoutId = setTimeout(() => {
+        setTypedText(currentValue.substring(0, typedText.length + 1));
+      }, 100);
+    } else {
+      timeoutId = setTimeout(() => {
+        setTypedText("");
+        setCurrentIndex((prev) => (prev + 1) % values.length);
+      }, 2000);
+    }
 
-  return () => clearTimeout(timeoutId);
-}, [typedText, currentIndex, values]);
-
+    return () => clearTimeout(timeoutId);
+  }, [typedText, currentIndex, values]);
 
   const stats = [
     {
@@ -280,13 +283,13 @@ useEffect(() => {
 
             {/* Call to Action */}
             <div className="text-center">
-              <button className="group bg-gradient-to-r from-coral to-turquoise text-white px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-                Rejoignez l'Aventure
+              <Link to="/new" className="group bg-gradient-to-r from-coral to-turquoise text-white px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                Nos Actualités{" "}
                 <ChevronRight
                   className="inline-block ml-2 group-hover:translate-x-1 transition-transform"
                   size={20}
                 />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
