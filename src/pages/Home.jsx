@@ -3,7 +3,7 @@ import TeamSection from "./Team";
 
 function Home() {
   return (
-    <div id="home">
+    <div id="home" className="my-20">
       <HeroSection />
       <TeamSection />
     </div>

@@ -187,7 +187,7 @@ const TeamSection = () => {
         >
           <h2
             id="team-heading"
-            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-coral via-turquoise to-coral bg-clip-text text-transparent font-mono"
+            className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-coral via-turquoise to-coral bg-clip-text text-transparent font-mono"
           >
             &lt;Notre Équipe/&gt;
           </h2>

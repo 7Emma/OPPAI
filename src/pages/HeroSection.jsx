@@ -43,7 +43,7 @@ const HeroSection = ({ scrollToSection }) => {
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden top-20 bottom-full"
     >
       {/* Arrière-plan */}
       <div className="absolute inset-0">
