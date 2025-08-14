@@ -43,10 +43,10 @@ const HeroSection = ({ scrollToSection }) => {
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden top-20 bottom-full"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden pt-24"
     >
       {/* Arrière-plan */}
-      <div className="absolute inset-0">
+    <div className="absolute inset-0">
         {backgroundImages.map((bg, index) => (
           <div
             key={index}
