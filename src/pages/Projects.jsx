@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Terminal,
@@ -9,8 +9,6 @@ import {
   Eye,
   Calendar,
   Users,
-  Zap,
-  Filter,
   Search,
   Play,
   Download,

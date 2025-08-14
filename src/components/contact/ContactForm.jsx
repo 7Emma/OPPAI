@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Send } from "lucide-react";
 import LoadingButton from "../LoadingButton";
 import Toast from "../Toast";
@@ -13,26 +13,24 @@ const ContactForm = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+    // Simule un envoi asynchrone
     console.log("Form submitted:", formData);
-    // Simule un envoi asynchrone (API)
     setTimeout(() => {
       setLoading(false);
       setToast("Message envoyé !");
       setFormData({ name: "", email: "", subject: "", message: "" });
-    });
-
-    setTimeout(() => setToast(""), 5000);
-  };
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+      // Supprime le toast après 5s
+      setTimeout(() => setToast(""), 5000);
+    }, 1500);
   };
 
   return (
@@ -55,11 +53,12 @@ const ContactForm = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-turquoise focus:outline-none transition-colors duration-300"
               placeholder="Votre nom ou entreprise"
+              className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-turquoise focus:outline-none transition-colors duration-300"
               required
             />
           </div>
+
           <div>
             <label className="block text-gray-300 text-sm font-medium mb-2">
               Email
@@ -69,8 +68,8 @@ const ContactForm = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-turquoise focus:outline-none transition-colors duration-300"
               placeholder="votre@email.com"
+              className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-turquoise focus:outline-none transition-colors duration-300"
               required
             />
           </div>
@@ -105,22 +104,23 @@ const ContactForm = () => {
             value={formData.message}
             onChange={handleChange}
             rows={5}
-            className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-turquoise focus:outline-none transition-colors duration-300 resize-none"
             placeholder="Décrivez votre projet, vos besoins, timeline et budget approximatif..."
+            className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-turquoise focus:outline-none transition-colors duration-300 resize-none"
             required
           ></textarea>
         </div>
 
-        {/* Bouton avec spinner */}
         <LoadingButton
-          isLoading={loading}
           type="submit"
-          className="w-full bg-gradient-to-r from-coral to-turquoise px-8 py-4 rounded-lg text-white font-semibold hover:from-coral-dark hover:to-turquoise-dark transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-coral/25 flex items-center justify-center"
+          loading={loading}
+          className="w-full flex items-center justify-center space-x-2"
         >
-          <Send size={20} className="mr-2" />
-          {loading ? "Envoi..." : "Envoyer le Message"}
+          <Send size={20} />
+          <span>{loading ? "Envoi..." : "Envoyer le message"}</span>
         </LoadingButton>
       </form>
+
+      {toast && <Toast message={toast} />}
     </div>
   );
 };

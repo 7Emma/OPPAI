@@ -1,11 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Code,
-  Palette,
-  Database,
-  Globe,
-  Smartphone,
-  Settings,
   ExternalLink,
   Mail,
   Github,
@@ -15,7 +10,6 @@ import {
   Users,
 } from "lucide-react";
 import teamMembers from "../../Datas/personnel";
-import { Link } from "react-router-dom";
 
 const Personal = () => {
 
@@ -273,20 +267,6 @@ const Personal = () => {
           >
             Démarrer un projet
           </a>
-        </div>
-        {/**Pour ajouter les infos */}
-        <div className="text-center p-6 bg-slate-800 rounded-lg shadow-lg mt-10">
-          <p className="mb-4 text-white">
-            Vous appartenez à la team{" "}
-            <span className="text-coral font-semibold">OPPAI</span> ? Ajoutez ou
-            modifiez vos informations !
-          </p>
-          <Link
-            to="/dashboard"
-            className="inline-block px-6 py-2 bg-pink-300 hover:bg-coral text-white font-semibold rounded-lg transition-colors duration-300"
-          >
-            Ajouter
-          </Link>
         </div>
       </div>
     </div>

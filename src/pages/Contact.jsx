@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { Calendar, Phone } from "lucide-react";
 import SocialsAndProjects from "../components/contact/SocialsAndProjects";

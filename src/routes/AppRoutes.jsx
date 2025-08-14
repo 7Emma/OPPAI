@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "../pages/Home";
 import New from "../pages/Blog/New";
@@ -7,6 +6,9 @@ import Dashboard from "../pages/Dashboard";
 import BlogLayout from "../components/layouts/BlogLayout";
 import ProtectedRoute from "../components/ProtectedRoute";
 import NotFound from "../pages/Errors/NotFound";
+import AddInfo from "../components/addElement/AddInfo";
+import AddNew from "../components/addElement/AddNew";
+import Modifie from "../components/addElement/Modifie";
 
 const AppRoutes = () => (
   <Routes>
@@ -32,6 +34,31 @@ const AppRoutes = () => (
       element={
         <ProtectedRoute>
           <Dashboard />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/add-info"
+      element={
+        <ProtectedRoute>
+          <AddInfo />
+        </ProtectedRoute>
+      }
+    />
+
+    <Route
+      path="/add-new"
+      element={
+        <ProtectedRoute>
+          <AddNew />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/edit-info"
+      element={
+        <ProtectedRoute>
+          <Modifie />
         </ProtectedRoute>
       }
     />

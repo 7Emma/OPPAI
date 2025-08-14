@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
-import { Code, ChevronDown, Github, Linkedin, Mail } from "lucide-react";
+import { Code, ChevronDown } from "lucide-react";
 import bg1 from "../assets/bg/bg1.jpeg";
 import bg2 from "../assets/bg/bg2.jpeg";
 import bg3 from "../assets/bg/bg3.jpeg";

@@ -1,4 +1,3 @@
-import React from "react";
 import { Mail, ArrowRight, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 

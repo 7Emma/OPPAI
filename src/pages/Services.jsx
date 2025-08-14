@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Clock, Users, Star, Zap } from "lucide-react";
 import services from "../Datas/services";

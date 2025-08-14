@@ -1,4 +1,3 @@
-import React from "react";
 import { Lock, CheckCircle, AlertCircle } from "lucide-react";
 
 const CodeVerificationStep = ({

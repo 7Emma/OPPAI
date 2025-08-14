@@ -1,6 +1,5 @@
-import React from "react";
 import { useAuth } from "../context/AuthContext";
-import AuthForm from "../pages/AuthForm";
+import AuthForm from "../context/AuthForm";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();

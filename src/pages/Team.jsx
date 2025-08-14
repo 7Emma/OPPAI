@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -18,9 +18,6 @@ import {
   Coffee,
   Zap,
 } from "lucide-react";
-import team1 from "../assets/team/team1.jpeg";
-import team2 from "../assets/team/team2.jpeg";
-import team3 from "../assets/team/team3.jpeg";
 
 const roleData = {
   "Frontend Developers": {
@@ -94,7 +91,7 @@ const teamStats = [
   },
 ];
 
-const RoleCard = ({ role, data, isHovered, onHover }) => (
+const RoleCard = ({ role, data, onHover }) => (
   <motion.div
     whileHover={{
       scale: 1.05,
@@ -314,6 +311,20 @@ const TeamSection = () => {
             className="inline-flex items-center bg-coral px-8 py-3 mt-10 rounded-full text-white font-semibold hover:bg-rose-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             Visiter l'équipe
+          </Link>
+        </div>
+        {/**Pour ajouter les infos */}
+        <div className="text-center p-6 bg-slate-800 rounded-lg shadow-lg mt-10">
+          <p className="mb-4 text-white">
+            Vous appartenez à la team{" "}
+            <span className="text-coral font-semibold">OPPAI</span> ? Ajoutez ou
+            modifiez vos informations !
+          </p>
+          <Link
+            to="/dashboard"
+            className="inline-block px-6 py-2 bg-pink-300 hover:bg-coral text-white font-semibold rounded-lg transition-colors duration-300"
+          >
+            Ajouter
           </Link>
         </div>
       </div>

@@ -20,10 +20,58 @@ import {
   CheckCircle,
   Upload,
   Eye,
-  Sparkles,
+  Edit3,
+  RotateCcw,
+  AlertCircle,
 } from "lucide-react";
-import LoadingButton from "../LoadingButton";
-import Toast from "../Toast";
+
+// Composant LoadingButton simple
+const LoadingButton = ({ onClick, loading, disabled, className, children }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled || loading}
+    className={className}
+  >
+    {loading ? (
+      <div className="flex items-center gap-2">
+        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        {children}
+      </div>
+    ) : (
+      children
+    )}
+  </button>
+);
+
+// Composant Toast simple
+const Toast = ({ message, type = "success", onClose }) => (
+  <div className="fixed top-4 right-4 z-50 animate-slide-in">
+    <div
+      className={`px-6 py-4 rounded-lg shadow-lg text-white font-medium flex items-center gap-3 max-w-sm ${
+        type === "success"
+          ? "bg-green-500"
+          : type === "error"
+          ? "bg-red-500"
+          : type === "warning"
+          ? "bg-yellow-500"
+          : "bg-blue-500"
+      }`}
+    >
+      {type === "success" && <CheckCircle className="w-5 h-5" />}
+      {type === "error" && <X className="w-5 h-5" />}
+      {type === "warning" && <AlertCircle className="w-5 h-5" />}
+      {type === "info" && <AlertCircle className="w-5 h-5" />}
+      <span className="flex-1">{message}</span>
+      <button
+        onClick={onClose}
+        className="p-1 hover:bg-white/20 rounded transition-colors"
+      >
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+  </div>
+);
 
 // Sélection des spécialités reliées aux icones
 const specialityIcons = {
@@ -38,28 +86,37 @@ const specialityIcons = {
   "UI/UX Designer": Layout,
 };
 
-function AddInfo() {
-  const [formData, setFormData] = useState({
-    name: "",
-    role: "",
-    image: "",
-    technologies: [],
-    speciality: "",
-    description: "",
-    portfolioLink: "",
-    email: "",
-    github: "",
-    linkedin: "",
-    projects: 0,
-    rating: 0,
-    gradient: "#FF6F61",
-  });
+// Données d'exemple pour simuler un profil existant
+const mockExistingProfile = {
+  name: "David IDOHOU Asabi Kendou",
+  role: "Développeur Full Stack & Ingénieur IA",
+  image:
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+  technologies: ["React", "Node.js", "Python", "MongoDB", "TypeScript"],
+  speciality: "Développeur Full Stack",
+  description:
+    "Passionné par le développement web moderne et l'intelligence artificielle, je crée des solutions innovantes qui allient performance et expérience utilisateur exceptionnelle.",
+  portfolioLink: "https://david-portfolio.com",
+  email: "david.idohou@exemple.com",
+  github: "davididohou",
+  linkedin: "david-idohou",
+  projects: 15,
+  rating: 4.8,
+  gradient: "#FF6F61",
+};
 
+function Modifie({ profileId }) {
+  // Ajoutez un état pour le chargement initial des données
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [formData, setFormData] = useState(null); // Initialisé à null
+  const [originalData, setOriginalData] = useState(null); // Initialisé à null
   const [newTechnology, setNewTechnology] = useState("");
   const [focusedField, setFocusedField] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [toast, setToast] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   // Fonction pour afficher le toast
   const showToast = (message, type = "success") => {
@@ -70,6 +127,34 @@ function AddInfo() {
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  // Effect pour charger les données du profil depuis le backend
+  useEffect(() => {
+    setIsInitialLoading(true);
+
+    // --- ICI QUE VOUS METTRIEZ VOTRE VRAI APPEL API ---
+    // Supposons que vous ayez l'e-mail de l'utilisateur authentifié
+    // const userEmail = "david.idohou@exemple.com";
+    // fetch(`/api/profile?email=${userEmail}`)
+
+    // Simulation d'une requête API
+    setTimeout(() => {
+      // Les données de l'API sont reçues
+      const fetchedProfile = mockExistingProfile;
+      setFormData(fetchedProfile);
+      setOriginalData(fetchedProfile);
+      setIsInitialLoading(false);
+    }, 1500); // Délai de 1.5s pour simuler le chargement
+  }, []); // Se déclenche une seule fois au montage du composant
+
+  // Vérifier s'il y a des modifications
+  useEffect(() => {
+    if (formData && originalData) {
+      const hasModifications =
+        JSON.stringify(formData) !== JSON.stringify(originalData);
+      setHasChanges(hasModifications);
+    }
+  }, [formData, originalData]);
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -124,25 +209,47 @@ function AddInfo() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const resetForm = () => {
+    setIsResetting(true);
+    setTimeout(() => {
+      setFormData(originalData);
+      setIsResetting(false);
+      showToast("Formulaire réinitialisé aux valeurs d'origine", "info");
+    }, 300);
+  };
 
+  const handleSubmit = () => {
     // Vérification de tous les champs de formData
     const allFields = Object.keys(formData);
     const isFormValid = allFields.every((field) => {
-      // Les champs 'image', 'technologies' et 'gradient' ont des vérifications spécifiques
-      if (field === "image") return !!formData.image;
-      if (field === "technologies") return formData.technologies.length > 0;
-      if (field === "gradient") return !!formData.gradient;
+      // Les champs 'portfolioLink', 'github' et 'linkedin' ne sont pas obligatoires
       if (
         field === "portfolioLink" ||
         field === "github" ||
         field === "linkedin"
       )
-        return true; // Les liens ne sont pas obligatoires
-
-      // Pour les autres champs, vérifier s'ils sont remplis
-      return formData[field] && String(formData[field]).trim() !== "";
+        return true;
+      // Les autres champs doivent être remplis
+      if (
+        (formData[field] === undefined || formData[field] === null) &&
+        field !== "image" &&
+        field !== "technologies"
+      ) {
+        return false;
+      }
+      if (field === "image") {
+        return !!formData.image;
+      }
+      if (field === "technologies") {
+        return formData.technologies.length > 0;
+      }
+      if (
+        typeof formData[field] === "string" &&
+        formData[field].trim() === ""
+      ) {
+        return false;
+      }
+      return true;
     });
 
     if (!isFormValid) {
@@ -150,20 +257,37 @@ function AddInfo() {
       return;
     }
 
-    setIsLoading(true);
+    if (!hasChanges) {
+      showToast("Aucune modification détectée.", "warning");
+      return;
+    }
 
-    // Simuler une requête API
+    setIsSaving(true);
+
+    // Simuler une requête API de modification
     setTimeout(() => {
-      console.log("Données formatées:", JSON.stringify(formData, null, 2));
-      setIsLoading(false);
-      showToast("Formulaire soumis avec succès !");
+      console.log("Données modifiées:", JSON.stringify(formData, null, 2));
+      setOriginalData(formData); // Mettre à jour les données d'origine
+      setIsSaving(false);
+      showToast("Profil modifié avec succès !");
     }, 2000);
   };
+
+  if (isInitialLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 text-white font-sans">
+        <div className="flex flex-col items-center gap-4 animate-pulse">
+          <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+          <p className="text-xl">Chargement du profil...</p>
+        </div>
+      </div>
+    );
+  }
 
   const SelectedIcon = specialityIcons[formData.speciality] || Book;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-800 p-4 md:p-8 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 p-4 md:p-8 font-sans">
       <style jsx>{`
         @keyframes fadeInUp {
           from {
@@ -187,12 +311,26 @@ function AddInfo() {
           }
         }
 
+        @keyframes pulse {
+          0%,
+          100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
+          }
+        }
+
         .animate-fade-in-up {
           animation: fadeInUp 0.5s ease-out forwards;
         }
 
         .animate-slide-in {
           animation: slideIn 0.3s ease-out;
+        }
+
+        .animate-pulse-soft {
+          animation: pulse 2s ease-in-out infinite;
         }
 
         .card {
@@ -208,7 +346,7 @@ function AddInfo() {
 
         .input-focus {
           transform: scale(1.01);
-          box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.1);
+          box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
         }
 
         .tech-tag {
@@ -235,26 +373,73 @@ function AddInfo() {
         .icon-hover {
           transition: transform 0.3s ease;
         }
+
+        .changes-indicator {
+          position: relative;
+        }
+
+        .changes-indicator::after {
+          content: "";
+          position: absolute;
+          top: -2px;
+          right: -2px;
+          width: 8px;
+          height: 8px;
+          background: #ef4444;
+          border-radius: 50%;
+          animation: pulse 2s ease-in-out infinite;
+        }
       `}</style>
 
       <div className="max-w-4xl mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-6">
           {/* Header */}
           <div
             className={`rounded-2xl p-6 shadow-xl text-white overflow-hidden relative transition-all duration-500 ${
               isVisible ? "animate-fade-in-up" : ""
             }`}
             style={{
-              background: `linear-gradient(135deg, ${formData.gradient}, #40E0D0)`,
+              background: `linear-gradient(135deg, ${formData.gradient}, #9333EA)`,
             }}
           >
-            <h1 className="text-3xl font-bold mb-2 relative z-10">
-              <Sparkles className="inline-block w-8 h-8 mr-2" />
-              Formulaire Profil Développeur
-            </h1>
-            <p className="opacity-90 relative z-10">
-              Remplissez tous les champs pour créer un profil complet
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold mb-2 relative z-10">
+                  <Edit3 className="inline-block w-8 h-8 mr-2" />
+                  Modifier le Profil Développeur
+                </h1>
+                <p className="opacity-90 relative z-10">
+                  Modifiez vos informations professionnelles
+                </p>
+              </div>
+              {hasChanges && (
+                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2">
+                  <AlertCircle className="w-5 h-5 text-yellow-300" />
+                  <span className="text-sm font-medium">
+                    Modifications non sauvegardées
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Boutons d'action */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-end">
+            <button
+              type="button"
+              onClick={resetForm}
+              disabled={!hasChanges || isResetting}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                hasChanges && !isResetting
+                  ? "bg-gray-500 text-white hover:bg-gray-600 button-hover"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+            >
+              <RotateCcw
+                className={`w-4 h-4 ${isResetting ? "animate-spin" : ""}`}
+              />
+              {isResetting ? "Réinitialisation..." : "Réinitialiser"}
+            </button>
           </div>
 
           {/* Informations de base */}
@@ -264,8 +449,8 @@ function AddInfo() {
             }`}
           >
             <div className="flex items-center gap-3 mb-6">
-              <User className="w-6 h-6 text-[#40E0D0] icon-hover" />
-              <h2 className="text-2xl font-bold text-[#40E0D0]">
+              <User className="w-6 h-6 text-purple-600 icon-hover" />
+              <h2 className="text-2xl font-bold text-purple-600">
                 Informations de base
               </h2>
             </div>
@@ -283,8 +468,12 @@ function AddInfo() {
                   onFocus={() => setFocusedField("name")}
                   onBlur={() => setFocusedField(null)}
                   placeholder="ex: David IDOHOU Asabi Kendou"
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all duration-200 ${
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
                     focusedField === "name" ? "input-focus" : ""
+                  } ${
+                    formData.name !== originalData.name
+                      ? "changes-indicator"
+                      : ""
                   }`}
                   required
                 />
@@ -302,8 +491,12 @@ function AddInfo() {
                   onFocus={() => setFocusedField("role")}
                   onBlur={() => setFocusedField(null)}
                   placeholder="ex: Développeur Full Stack & Ingénieur IA"
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all duration-200 ${
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
                     focusedField === "role" ? "input-focus" : ""
+                  } ${
+                    formData.role !== originalData.role
+                      ? "changes-indicator"
+                      : ""
                   }`}
                   required
                 />
@@ -319,8 +512,7 @@ function AddInfo() {
                     name="avatar"
                     accept="image/*"
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#40E0D0] file:text-white hover:file:bg-cyan-600 transition-all duration-200"
-                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700 transition-all duration-200"
                   />
                   <Upload className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                 </div>
@@ -332,7 +524,11 @@ function AddInfo() {
                     <img
                       src={formData.image}
                       alt="Aperçu de la photo"
-                      className="w-32 h-32 object-cover rounded-full shadow-md border-4 border-[#40E0D0] transition-all duration-200 hover:scale-105"
+                      className={`w-32 h-32 object-cover rounded-full shadow-md border-4 border-purple-600 transition-all duration-200 hover:scale-105 ${
+                        formData.image !== originalData.image
+                          ? "animate-pulse-soft"
+                          : ""
+                      }`}
                     />
                     <div className="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <Eye className="w-6 h-6 text-white" />
@@ -350,7 +546,11 @@ function AddInfo() {
                     name="speciality"
                     value={formData.speciality}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10 focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all duration-200 appearance-none"
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg pr-10 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 appearance-none ${
+                      formData.speciality !== originalData.speciality
+                        ? "changes-indicator"
+                        : ""
+                    }`}
                     required
                   >
                     <option value="" disabled>
@@ -365,7 +565,7 @@ function AddInfo() {
                   <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
                     <SelectedIcon
                       className={`w-5 h-5 text-gray-400 transition-all duration-200 ${
-                        formData.speciality ? "text-[#40E0D0]" : ""
+                        formData.speciality ? "text-purple-600" : ""
                       }`}
                     />
                   </div>
@@ -384,8 +584,12 @@ function AddInfo() {
                   onBlur={() => setFocusedField(null)}
                   rows={4}
                   placeholder="Décrivez votre expertise et votre approche..."
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all duration-200 resize-none ${
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 resize-none ${
                     focusedField === "description" ? "input-focus" : ""
+                  } ${
+                    formData.description !== originalData.description
+                      ? "changes-indicator"
+                      : ""
                   }`}
                   required
                 />
@@ -399,10 +603,14 @@ function AddInfo() {
             style={{ animationDelay: "0.1s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Tags className="w-6 h-6 text-[#FF6F61] icon-hover" />
-              <h2 className="text-2xl font-bold text-[#FF6F61]">
+              <Tags className="w-6 h-6 text-orange-500 icon-hover" />
+              <h2 className="text-2xl font-bold text-orange-500">
                 Technologies <span className="text-red-500">*</span>
               </h2>
+              {JSON.stringify(formData.technologies) !==
+                JSON.stringify(originalData.technologies) && (
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse-soft"></div>
+              )}
             </div>
             <div className="mb-4 flex flex-col sm:flex-row gap-2">
               <input
@@ -410,7 +618,7 @@ function AddInfo() {
                 value={newTechnology}
                 onChange={(e) => setNewTechnology(e.target.value)}
                 placeholder="Ajouter une technologie (ex: React, Python...)"
-                className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all duration-200"
+                className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
                 onKeyPress={(e) =>
                   e.key === "Enter" && (e.preventDefault(), addTechnology())
                 }
@@ -418,7 +626,7 @@ function AddInfo() {
               <button
                 type="button"
                 onClick={addTechnology}
-                className="w-full sm:w-auto px-6 py-3 bg-[#FF6F61] text-white rounded-lg font-medium hover:bg-[#E65C50] transition-all duration-200 flex items-center justify-center gap-2 button-hover"
+                className="w-full sm:w-auto px-6 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-all duration-200 flex items-center justify-center gap-2 button-hover"
               >
                 <Plus className="w-4 h-4" /> Ajouter
               </button>
@@ -432,7 +640,7 @@ function AddInfo() {
                 formData.technologies.map((tech, index) => (
                   <div
                     key={`${tech}-${index}`}
-                    className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-2 rounded-lg border-l-4 border-[#40E0D0] tech-tag animate-slide-in"
+                    className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-2 rounded-lg border-l-4 border-purple-600 tech-tag animate-slide-in"
                   >
                     <span className="font-medium text-gray-800">{tech}</span>
                     <button
@@ -454,8 +662,8 @@ function AddInfo() {
             style={{ animationDelay: "0.2s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Link className="w-6 h-6 text-[#40E0D0] icon-hover" />
-              <h2 className="text-2xl font-bold text-[#40E0D0]">
+              <Link className="w-6 h-6 text-purple-600 icon-hover" />
+              <h2 className="text-2xl font-bold text-purple-600">
                 Contacts et Liens
               </h2>
             </div>
@@ -466,7 +674,7 @@ function AddInfo() {
                   label: "Lien Portfolio",
                   type: "url",
                   placeholder: "https://mon-portfolio.com",
-                  required: true,
+                  required: false, // Les liens ne sont plus obligatoires
                 },
                 {
                   name: "email",
@@ -480,19 +688,20 @@ function AddInfo() {
                   label: "Pseudo GitHub",
                   type: "text",
                   placeholder: "davididohou",
-                  required: true,
+                  required: false, // Les liens ne sont plus obligatoires
                 },
                 {
                   name: "linkedin",
                   label: "Pseudo LinkedIn",
                   type: "text",
                   placeholder: "david-idohou",
-                  required: true,
+                  required: false, // Les liens ne sont plus obligatoires
                 },
               ].map((field) => (
                 <div key={field.name}>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {field.label} <span className="text-red-500">*</span>
+                    {field.label}{" "}
+                    {field.required && <span className="text-red-500">*</span>}
                   </label>
                   <input
                     type={field.type}
@@ -500,8 +709,12 @@ function AddInfo() {
                     value={formData[field.name]}
                     onChange={handleInputChange}
                     placeholder={field.placeholder}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all duration-200"
-                    required
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
+                      formData[field.name] !== originalData[field.name]
+                        ? "changes-indicator"
+                        : ""
+                    }`}
+                    required={field.required}
                   />
                 </div>
               ))}
@@ -514,8 +727,8 @@ function AddInfo() {
             style={{ animationDelay: "0.3s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Star className="w-6 h-6 text-[#FF6F61] icon-hover" />
-              <h2 className="text-2xl font-bold text-[#FF6F61]">
+              <Star className="w-6 h-6 text-orange-500 icon-hover" />
+              <h2 className="text-2xl font-bold text-orange-500">
                 Statistiques
               </h2>
             </div>
@@ -529,7 +742,11 @@ function AddInfo() {
                   name="projects"
                   value={formData.projects}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all duration-200"
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
+                    formData.projects !== originalData.projects
+                      ? "changes-indicator"
+                      : ""
+                  }`}
                   required
                 />
               </div>
@@ -545,7 +762,11 @@ function AddInfo() {
                   step="0.1"
                   min="0"
                   max="5"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all duration-200"
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
+                    formData.rating !== originalData.rating
+                      ? "changes-indicator"
+                      : ""
+                  }`}
                   required
                 />
               </div>
@@ -558,10 +779,13 @@ function AddInfo() {
             style={{ animationDelay: "0.4s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Palette className="w-6 h-6 text-[#40E0D0] icon-hover" />
-              <h2 className="text-2xl font-bold text-[#40E0D0]">
+              <Palette className="w-6 h-6 text-purple-600 icon-hover" />
+              <h2 className="text-2xl font-bold text-purple-600">
                 Couleur de Thème <span className="text-red-500">*</span>
               </h2>
+              {formData.gradient !== originalData.gradient && (
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse-soft"></div>
+              )}
             </div>
             <div className="flex items-center gap-3 mb-3">
               <label className="w-full text-sm font-medium text-gray-700">
@@ -584,7 +808,7 @@ function AddInfo() {
             <div
               className="h-4 rounded-lg mt-3 transition-all duration-300"
               style={{
-                background: `linear-gradient(135deg, ${formData.gradient}, #40E0D0)`,
+                background: `linear-gradient(135deg, ${formData.gradient}, #9333EA)`,
               }}
             />
           </div>
@@ -593,16 +817,25 @@ function AddInfo() {
           <div className="flex justify-center pb-8">
             <LoadingButton
               onClick={handleSubmit}
-              loading={isLoading}
-              className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold text-lg shadow-lg hover:bg-[#E65C50] flex items-center gap-3 button-hover transition-all duration-200"
+              loading={isSaving}
+              disabled={!hasChanges}
+              className={`px-8 py-4 rounded-xl font-semibold text-lg shadow-lg flex items-center gap-3 transition-all duration-200 ${
+                hasChanges
+                  ? "bg-purple-600 text-white hover:bg-purple-700 button-hover"
+                  : "bg-gray-400 text-gray-600 cursor-not-allowed"
+              }`}
             >
               <Save size={20} />
               <span>
-                {isLoading ? "Publication..." : "Générer le profil Dev OPPAI"}
+                {isSaving
+                  ? "Sauvegarde..."
+                  : hasChanges
+                  ? "Sauvegarder les modifications"
+                  : "Aucune modification"}
               </span>
             </LoadingButton>
           </div>
-        </form>
+        </div>
       </div>
 
       {toast && (
@@ -616,4 +849,4 @@ function AddInfo() {
   );
 }
 
-export default AddInfo;
+export default Modifie;
