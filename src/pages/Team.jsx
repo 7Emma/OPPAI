@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import {
   Users,
   Laptop,
@@ -17,34 +18,37 @@ import {
   Coffee,
   Zap,
 } from "lucide-react";
+import team1 from "../assets/team/team1.jpeg";
+import team2 from "../assets/team/team2.jpeg";
+import team3 from "../assets/team/team3.jpeg";
 
 const roleData = {
   "Frontend Developers": {
     icon: <Laptop size={20} />,
     count: "3+",
     technologies: ["React", "Vue.js", "TypeScript", "Tailwind"],
-    experience: "2-5 ans",
+    experience: "2-3 ans",
     description: "Création d'interfaces user modernes et responsive",
   },
   "Backend Engineers": {
     icon: <Server size={20} />,
     count: "2+",
     technologies: ["Node.js", "Python", "PostgreSQL", "MongoDB"],
-    experience: "3-6 ans",
+    experience: "3-4 ans",
     description: "Architecture serveur robuste et APIs performantes",
   },
   "DevOps Specialists": {
     icon: <Cloud size={20} />,
     count: "2+",
     technologies: ["Docker", "Kubernetes", "AWS", "CI/CD"],
-    experience: "4-7 ans",
+    experience: "3-5 ans",
     description: "Infrastructure cloud et déploiement automatisé",
   },
   "Data Scientists": {
     icon: <Brain size={20} />,
     count: "1+",
     technologies: ["Python", "TensorFlow", "Pandas", "Jupyter"],
-    experience: "3-5 ans",
+    experience: "2-5 ans",
     description: "Analyse de données et modèles d'IA",
   },
   "Security Experts": {
@@ -304,6 +308,14 @@ const TeamSection = () => {
             </a>
           </div>
         </motion.div>
+        <div className="flex justify-center">
+          <Link
+            to="/personal"
+            className="inline-flex items-center bg-coral px-8 py-3 mt-10 rounded-full text-white font-semibold hover:bg-rose-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
+          >
+            Visiter l'équipe
+          </Link>
+        </div>
       </div>
 
       <style jsx="true">{`

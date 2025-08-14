@@ -1,5 +1,6 @@
 import React from "react";
 import { Mail, ArrowRight, AlertCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const EmailStep = ({ email, setEmail, onSubmit, loading, error }) => {
   const handleSubmit = (e) => {
@@ -65,6 +66,12 @@ const EmailStep = ({ email, setEmail, onSubmit, loading, error }) => {
             </>
           )}
         </button>
+        <Link
+          to="/personal"
+          className="inline-block px-4 py-2 bg-coral text-white rounded-lg font-medium hover:bg-rose-500 transition-colors"
+        >
+          ← Retour
+        </Link>
       </div>
     </div>
   );

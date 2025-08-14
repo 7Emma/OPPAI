@@ -1,7 +1,7 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import AddInfo from "../components/AddInfo";
+import AddInfo from "../components/addElement/AddInfo";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -9,21 +9,22 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-coral to-turquoise">
       <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <h1 className="text-xl font-semibold">Dashboard</h1>
-          <div className="flex items-center space-x-4">
-            <span>
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center h-auto sm:h-16 py-2 sm:py-0">
+          <h1 className="text-xl font-semibold mb-2 sm:mb-0">Dashboard</h1>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+            <span className="text-sm">
               Connecté en tant que: <strong>{user.email}</strong>
             </span>
             <button
               onClick={logout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
             >
               Déconnexion
             </button>
           </div>
         </div>
       </nav>
+
       <main className="max-w-7xl mx-auto py-6 px-4">
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-2xl font-bold mb-4">Bienvenue !</h2>

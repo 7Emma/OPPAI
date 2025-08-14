@@ -76,7 +76,7 @@ const ContactSection = () => {
                 Réserver un Appel (30min gratuit)
               </a>
               <a
-                href="https://wa.me/2290191732432"
+                href="https://wa.me/2290191732432?text=Bonjour%2C%20je%20souhaite%20d%C3%A9marrer%20un%20projet%20avec%20vous"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border-2 border-turquoise px-6 py-3 rounded-full text-turquoise font-semibold hover:bg-turquoise hover:text-white transition-all duration-300 transform hover:scale-105 flex items-center justify-center"

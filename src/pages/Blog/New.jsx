@@ -209,7 +209,7 @@ function New() {
         )}
 
         {/* Newsletter Subscription */}
-        <div className="mt-20 bg-gradient-to-r from-turquoise via-cyan-500 to-coral rounded-2xl p-8 text-center text-white shadow-2xl border border-white/20">
+        <div className="mt-20 bg-gradient-to-r from-turquoise/80 via-cyan-500/80 to-slate-700/80 rounded-2xl p-8 text-center text-white shadow-2xl border border-white/20">
           <h3 className="text-2xl font-bold mb-4">
             Ne manquez aucune actualité !
           </h3>
@@ -221,9 +221,9 @@ function New() {
             <input
               type="email"
               placeholder="votre@email.com"
-              className="flex-1 px-4 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-gray-200 focus:ring-2 focus:ring-white/50 focus:border-white/50 transition-colors"
+              className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-gray-200 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition-colors"
             />
-            <button className="bg-white/20 backdrop-blur-sm border border-white/30 text-white px-6 py-3 rounded-lg font-medium hover:bg-white/30 hover:shadow-lg transition-all duration-300">
+            <button className="bg-coral-dark backdrop-blur-sm border border-white/30 text-white px-6 py-3 rounded-lg font-medium hover:bg-white/20 hover:shadow-lg transition-all duration-300">
               S'abonner
             </button>
           </div>

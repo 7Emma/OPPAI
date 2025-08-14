@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
+import LoadingButton from "../LoadingButton";
+import Toast from "../Toast";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -8,11 +10,22 @@ const ContactForm = () => {
     subject: "",
     message: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
+
     console.log("Form submitted:", formData);
-    // Ici vous pouvez ajouter la logique d'envoi du formulaire
+    // Simule un envoi asynchrone (API)
+    setTimeout(() => {
+      setLoading(false);
+      setToast("Message envoyé !");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    });
+
+    setTimeout(() => setToast(""), 5000);
   };
 
   const handleChange = (e) => {
@@ -98,13 +111,15 @@ const ContactForm = () => {
           ></textarea>
         </div>
 
-        <button
+        {/* Bouton avec spinner */}
+        <LoadingButton
+          isLoading={loading}
           type="submit"
           className="w-full bg-gradient-to-r from-coral to-turquoise px-8 py-4 rounded-lg text-white font-semibold hover:from-coral-dark hover:to-turquoise-dark transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-coral/25 flex items-center justify-center"
         >
           <Send size={20} className="mr-2" />
-          Envoyer le Message
-        </button>
+          {loading ? "Envoi..." : "Envoyer le Message"}
+        </LoadingButton>
       </form>
     </div>
   );

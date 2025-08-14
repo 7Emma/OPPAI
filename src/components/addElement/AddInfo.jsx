@@ -20,19 +20,19 @@ import {
   Network,
   Bug,
   Book,
-  Smartphone
+  Smartphone,
 } from "lucide-react";
 
 // Selection des specialites relies aux icones
 const specialityIcons = {
   "Développeur Full Stack": Code,
   "Ingénieur IA": Cloud,
-  "Backend": Database,
-  "Frontend": Monitor,
-  "DevOps": Network,
+  Backend: Database,
+  Frontend: Monitor,
+  DevOps: Network,
   "QA Analyst": Bug,
   "Data Engineer": Database,
-  "Mobile": Smartphone,
+  Mobile: Smartphone,
   "UI/UX Designer": Layout,
 };
 
@@ -257,13 +257,13 @@ function AddInfo() {
               </h2>
             </div>
 
-            <div className="mb-4 flex gap-2">
+            <div className="mb-4 flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 value={newTechnology}
                 onChange={(e) => setNewTechnology(e.target.value)}
                 placeholder="Ajouter une technologie (ex: React, Python...)"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all"
+                className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#40E0D0] focus:border-transparent transition-all"
                 onKeyPress={(e) =>
                   e.key === "Enter" && (e.preventDefault(), addTechnology())
                 }
@@ -271,7 +271,7 @@ function AddInfo() {
               <button
                 type="button"
                 onClick={addTechnology}
-                className="px-6 py-3 bg-[#FF6F61] text-white rounded-lg font-medium hover:bg-[#E65C50] transition-all flex items-center gap-2"
+                className="w-full sm:w-auto px-6 py-3 bg-[#FF6F61] text-white rounded-lg font-medium hover:bg-[#E65C50] transition-all flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" /> Ajouter
               </button>
