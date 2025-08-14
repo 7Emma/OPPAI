@@ -18,7 +18,6 @@ import teamMembers from "../../Datas/personnel";
 import { Link } from "react-router-dom";
 
 const Personal = () => {
-  const [selectedMember, setSelectedMember] = useState(null);
 
   const TechBadge = ({ tech, gradient }) => (
     <span

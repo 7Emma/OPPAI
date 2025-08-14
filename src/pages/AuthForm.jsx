@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import EmailStep from "../components/EmailStep";
-import CodeVerificationStep from "../components/CodeVerificationStep";
+import EmailStep from "../components/authentification/EmailStep";
+import CodeVerificationStep from "../components/authentification/CodeVerificationStep";
 import { useAuth } from "../context/AuthContext";
 
 const AuthForm = () => {

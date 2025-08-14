@@ -5,7 +5,7 @@ const AboutSection = () => {
   return (
     <section id='about' className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-5xl font-bold text-center mb-16 mt-10 animate-pulse bg-gradient-to-r from-coral to-turquoise bg-clip-text text-transparent">
+        <h2 className="ttext-5xl md:text-6xl font-bold text-center mb-16 mt-10 animate-pulse bg-gradient-to-r from-coral to-turquoise bg-clip-text text-transparent">
           &lt;À Propos/&gt;
         </h2>
         <div className="grid md:grid-cols-2 gap-12 items-center">
