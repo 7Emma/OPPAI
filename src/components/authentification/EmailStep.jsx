@@ -66,7 +66,7 @@ const EmailStep = ({ email, setEmail, onSubmit, loading, error }) => {
           )}
         </button>
         <Link
-          to="/personal"
+          to="/"
           className="inline-block px-4 py-2 bg-coral text-white rounded-lg font-medium hover:bg-rose-500 transition-colors"
         >
           ← Retour
