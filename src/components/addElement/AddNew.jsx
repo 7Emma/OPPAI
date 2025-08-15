@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
+  PlusCircle,
   FileText,
   User,
   Calendar,
@@ -11,8 +12,9 @@ import {
   Send,
   Eye,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Toast from "../Toast";
-import LoadingButton from "../LoadingButton";
+import LoadingButton from "../Spinner/LoadingButton";
 
 const AddNewsForm = () => {
   const [formData, setFormData] = useState({
@@ -202,6 +204,14 @@ const AddNewsForm = () => {
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
+        {/* Bouton Retour */}
+        <Link
+          to="/dashboard"
+          className="absolute left-0 top-0 m-4 text-xl bg-gradient-to-r from-red-400 to-cyan-400 text-white px-4 py-2 rounded-full shadow hover:opacity-80 transition"
+        >
+          ← Retour
+        </Link>
+
         {/* Header */}
         <motion.div
           initial={{ y: -50, opacity: 0 }}

@@ -7,7 +7,7 @@ import {
   Palette,
   Plus,
   X,
-  Link,
+  Link as LinkIcon,
   Code,
   Cloud,
   Database,
@@ -24,54 +24,9 @@ import {
   RotateCcw,
   AlertCircle,
 } from "lucide-react";
-
-// Composant LoadingButton simple
-const LoadingButton = ({ onClick, loading, disabled, className, children }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    disabled={disabled || loading}
-    className={className}
-  >
-    {loading ? (
-      <div className="flex items-center gap-2">
-        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-        {children}
-      </div>
-    ) : (
-      children
-    )}
-  </button>
-);
-
-// Composant Toast simple
-const Toast = ({ message, type = "success", onClose }) => (
-  <div className="fixed top-4 right-4 z-50 animate-slide-in">
-    <div
-      className={`px-6 py-4 rounded-lg shadow-lg text-white font-medium flex items-center gap-3 max-w-sm ${
-        type === "success"
-          ? "bg-green-500"
-          : type === "error"
-          ? "bg-red-500"
-          : type === "warning"
-          ? "bg-yellow-500"
-          : "bg-blue-500"
-      }`}
-    >
-      {type === "success" && <CheckCircle className="w-5 h-5" />}
-      {type === "error" && <X className="w-5 h-5" />}
-      {type === "warning" && <AlertCircle className="w-5 h-5" />}
-      {type === "info" && <AlertCircle className="w-5 h-5" />}
-      <span className="flex-1">{message}</span>
-      <button
-        onClick={onClose}
-        className="p-1 hover:bg-white/20 rounded transition-colors"
-      >
-        <X className="w-4 h-4" />
-      </button>
-    </div>
-  </div>
-);
+import LoadingButton from "../Spinner/LoadingButton";
+import Toast from "../Toast";
+import { Link } from "react-router-dom";
 
 // Sélection des spécialités reliées aux icones
 const specialityIcons = {
@@ -102,14 +57,29 @@ const mockExistingProfile = {
   linkedin: "david-idohou",
   projects: 15,
   rating: 4.8,
+  gradient: "#FF6F61", // Couleur initiale du dégradé
+};
+
+// Structure par défaut pour éviter les erreurs
+const defaultFormData = {
+  name: "",
+  role: "",
+  image: "",
+  technologies: [],
+  speciality: "",
+  description: "",
+  portfolioLink: "",
+  email: "",
+  github: "",
+  linkedin: "",
+  projects: 0,
+  rating: 0,
   gradient: "#FF6F61",
 };
 
 function Modifie({ profileId }) {
-  // Ajoutez un état pour le chargement initial des données
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [formData, setFormData] = useState(null); // Initialisé à null
-  const [originalData, setOriginalData] = useState(null); // Initialisé à null
+  const [formData, setFormData] = useState(defaultFormData);
+  const [originalData, setOriginalData] = useState(defaultFormData);
   const [newTechnology, setNewTechnology] = useState("");
   const [focusedField, setFocusedField] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -117,11 +87,11 @@ function Modifie({ profileId }) {
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fonction pour afficher le toast
   const showToast = (message, type = "success") => {
     setToast({ message, type });
-    setTimeout(() => setToast(null), 4000);
   };
 
   useEffect(() => {
@@ -130,22 +100,16 @@ function Modifie({ profileId }) {
 
   // Effect pour charger les données du profil depuis le backend
   useEffect(() => {
-    setIsInitialLoading(true);
-
-    // --- ICI QUE VOUS METTRIEZ VOTRE VRAI APPEL API ---
-    // Supposons que vous ayez l'e-mail de l'utilisateur authentifié
-    // const userEmail = "david.idohou@exemple.com";
-    // fetch(`/api/profile?email=${userEmail}`)
+    setIsLoading(true);
 
     // Simulation d'une requête API
     setTimeout(() => {
-      // Les données de l'API sont reçues
       const fetchedProfile = mockExistingProfile;
       setFormData(fetchedProfile);
       setOriginalData(fetchedProfile);
-      setIsInitialLoading(false);
-    }, 1500); // Délai de 1.5s pour simuler le chargement
-  }, []); // Se déclenche une seule fois au montage du composant
+      setIsLoading(false); // ✅ Fin du chargement
+    }, 1500);
+  }, []);
 
   // Vérifier s'il y a des modifications
   useEffect(() => {
@@ -219,40 +183,22 @@ function Modifie({ profileId }) {
   };
 
   const handleSubmit = () => {
-    // Vérification de tous les champs de formData
-    const allFields = Object.keys(formData);
-    const isFormValid = allFields.every((field) => {
-      // Les champs 'portfolioLink', 'github' et 'linkedin' ne sont pas obligatoires
-      if (
-        field === "portfolioLink" ||
-        field === "github" ||
-        field === "linkedin"
-      )
-        return true;
-      // Les autres champs doivent être remplis
-      if (
-        (formData[field] === undefined || formData[field] === null) &&
-        field !== "image" &&
-        field !== "technologies"
-      ) {
-        return false;
-      }
-      if (field === "image") {
-        return !!formData.image;
-      }
-      if (field === "technologies") {
-        return formData.technologies.length > 0;
-      }
-      if (
-        typeof formData[field] === "string" &&
-        formData[field].trim() === ""
-      ) {
-        return false;
-      }
-      return true;
-    });
+    const requiredFields = [
+      "name",
+      "role",
+      "speciality",
+      "description",
+      "email",
+    ];
+    const missingFields = requiredFields.filter(
+      (field) => !formData[field] || String(formData[field]).trim() === ""
+    );
 
-    if (!isFormValid) {
+    if (
+      missingFields.length > 0 ||
+      !formData.image ||
+      formData.technologies.length === 0
+    ) {
       showToast("Veuillez remplir tous les champs obligatoires.", "error");
       return;
     }
@@ -264,31 +210,23 @@ function Modifie({ profileId }) {
 
     setIsSaving(true);
 
-    // Simuler une requête API de modification
     setTimeout(() => {
       console.log("Données modifiées:", JSON.stringify(formData, null, 2));
-      setOriginalData(formData); // Mettre à jour les données d'origine
+      setOriginalData(formData);
       setIsSaving(false);
       showToast("Profil modifié avec succès !");
     }, 2000);
   };
 
-  if (isInitialLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 text-white font-sans">
-        <div className="flex flex-col items-center gap-4 animate-pulse">
-          <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-          <p className="text-xl">Chargement du profil...</p>
-        </div>
-      </div>
-    );
+  if (isLoading) {
+    return null;
   }
 
-  const SelectedIcon = specialityIcons[formData.speciality] || Book;
+  const SelectedIcon = specialityIcons[formData?.speciality] || Book;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 p-4 md:p-8 font-sans">
-      <style jsx>{`
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900  p-4 md:p-8 font-sans">
+      <style>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;
@@ -346,7 +284,7 @@ function Modifie({ profileId }) {
 
         .input-focus {
           transform: scale(1.01);
-          box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+          box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.2);
         }
 
         .tech-tag {
@@ -390,7 +328,13 @@ function Modifie({ profileId }) {
           animation: pulse 2s ease-in-out infinite;
         }
       `}</style>
-
+      {/* Bouton Retour */}
+      <Link
+        to="/dashboard"
+        className="fixed max-w-2xl left-4 top-4 text-xl bg-gradient-to-r from-red-400 to-cyan-400 text-white px-4 py-2 rounded-full shadow hover:opacity-80 transition"
+      >
+        ← Retour
+      </Link>
       <div className="max-w-4xl mx-auto">
         <div className="space-y-6">
           {/* Header */}
@@ -399,7 +343,9 @@ function Modifie({ profileId }) {
               isVisible ? "animate-fade-in-up" : ""
             }`}
             style={{
-              background: `linear-gradient(135deg, ${formData.gradient}, #9333EA)`,
+              background: `linear-gradient(135deg, ${
+                formData?.gradient || "#FF6F61"
+              }, #40E0D0)`,
             }}
           >
             <div className="flex items-center justify-between">
@@ -449,8 +395,8 @@ function Modifie({ profileId }) {
             }`}
           >
             <div className="flex items-center gap-3 mb-6">
-              <User className="w-6 h-6 text-purple-600 icon-hover" />
-              <h2 className="text-2xl font-bold text-purple-600">
+              <User className="w-6 h-6 text-turquoise icon-hover" />
+              <h2 className="text-2xl font-bold text-turquoise">
                 Informations de base
               </h2>
             </div>
@@ -463,15 +409,15 @@ function Modifie({ profileId }) {
                 <input
                   type="text"
                   name="name"
-                  value={formData.name}
+                  value={formData?.name || ""}
                   onChange={handleInputChange}
                   onFocus={() => setFocusedField("name")}
                   onBlur={() => setFocusedField(null)}
                   placeholder="ex: David IDOHOU Asabi Kendou"
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-turquoise focus:border-transparent transition-all duration-200 ${
                     focusedField === "name" ? "input-focus" : ""
                   } ${
-                    formData.name !== originalData.name
+                    formData?.name !== originalData?.name
                       ? "changes-indicator"
                       : ""
                   }`}
@@ -486,15 +432,15 @@ function Modifie({ profileId }) {
                 <input
                   type="text"
                   name="role"
-                  value={formData.role}
+                  value={formData?.role || ""}
                   onChange={handleInputChange}
                   onFocus={() => setFocusedField("role")}
                   onBlur={() => setFocusedField(null)}
                   placeholder="ex: Développeur Full Stack & Ingénieur IA"
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-turquoise focus:border-transparent transition-all duration-200 ${
                     focusedField === "role" ? "input-focus" : ""
                   } ${
-                    formData.role !== originalData.role
+                    formData?.role !== originalData?.role
                       ? "changes-indicator"
                       : ""
                   }`}
@@ -512,20 +458,20 @@ function Modifie({ profileId }) {
                     name="avatar"
                     accept="image/*"
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700 transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-turquoise file:text-white hover:file:bg-cyan-600 transition-all duration-200"
                   />
                   <Upload className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                 </div>
               </div>
 
-              {formData.image && (
+              {formData?.image && (
                 <div className="flex justify-center items-center animate-slide-in">
                   <div className="relative group">
                     <img
                       src={formData.image}
                       alt="Aperçu de la photo"
-                      className={`w-32 h-32 object-cover rounded-full shadow-md border-4 border-purple-600 transition-all duration-200 hover:scale-105 ${
-                        formData.image !== originalData.image
+                      className={`w-32 h-32 object-cover rounded-full shadow-md border-4 border-turquoise transition-all duration-200 hover:scale-105 ${
+                        formData?.image !== originalData?.image
                           ? "animate-pulse-soft"
                           : ""
                       }`}
@@ -544,10 +490,10 @@ function Modifie({ profileId }) {
                 <div className="relative">
                   <select
                     name="speciality"
-                    value={formData.speciality}
+                    value={formData?.speciality || ""}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg pr-10 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 appearance-none ${
-                      formData.speciality !== originalData.speciality
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg pr-10 focus:ring-2 focus:ring-turquoise focus:border-transparent transition-all duration-200 appearance-none ${
+                      formData?.speciality !== originalData?.speciality
                         ? "changes-indicator"
                         : ""
                     }`}
@@ -565,7 +511,7 @@ function Modifie({ profileId }) {
                   <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
                     <SelectedIcon
                       className={`w-5 h-5 text-gray-400 transition-all duration-200 ${
-                        formData.speciality ? "text-purple-600" : ""
+                        formData?.speciality ? "text-turquoise" : ""
                       }`}
                     />
                   </div>
@@ -578,16 +524,16 @@ function Modifie({ profileId }) {
                 </label>
                 <textarea
                   name="description"
-                  value={formData.description}
+                  value={formData?.description || ""}
                   onChange={handleInputChange}
                   onFocus={() => setFocusedField("description")}
                   onBlur={() => setFocusedField(null)}
                   rows={4}
                   placeholder="Décrivez votre expertise et votre approche..."
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 resize-none ${
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-turquoise focus:border-transparent transition-all duration-200 resize-none ${
                     focusedField === "description" ? "input-focus" : ""
                   } ${
-                    formData.description !== originalData.description
+                    formData?.description !== originalData?.description
                       ? "changes-indicator"
                       : ""
                   }`}
@@ -603,12 +549,12 @@ function Modifie({ profileId }) {
             style={{ animationDelay: "0.1s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Tags className="w-6 h-6 text-orange-500 icon-hover" />
-              <h2 className="text-2xl font-bold text-orange-500">
+              <Tags className="w-6 h-6 text-coral-dark icon-hover" />
+              <h2 className="text-2xl font-bold text-coral-dark">
                 Technologies <span className="text-red-500">*</span>
               </h2>
-              {JSON.stringify(formData.technologies) !==
-                JSON.stringify(originalData.technologies) && (
+              {JSON.stringify(formData?.technologies) !==
+                JSON.stringify(originalData?.technologies) && (
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse-soft"></div>
               )}
             </div>
@@ -618,7 +564,7 @@ function Modifie({ profileId }) {
                 value={newTechnology}
                 onChange={(e) => setNewTechnology(e.target.value)}
                 placeholder="Ajouter une technologie (ex: React, Python...)"
-                className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
+                className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-turquoise focus:border-transparent transition-all duration-200"
                 onKeyPress={(e) =>
                   e.key === "Enter" && (e.preventDefault(), addTechnology())
                 }
@@ -626,13 +572,13 @@ function Modifie({ profileId }) {
               <button
                 type="button"
                 onClick={addTechnology}
-                className="w-full sm:w-auto px-6 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-all duration-200 flex items-center justify-center gap-2 button-hover"
+                className="w-full sm:w-auto px-6 py-3 bg-coral text-white rounded-lg font-medium hover:bg-coral-dark transition-all duration-200 flex items-center justify-center gap-2 button-hover"
               >
                 <Plus className="w-4 h-4" /> Ajouter
               </button>
             </div>
             <div className="space-y-2">
-              {formData.technologies.length === 0 ? (
+              {!formData?.technologies || formData.technologies.length === 0 ? (
                 <p className="text-gray-500 text-center py-4">
                   Aucune technologie ajoutée
                 </p>
@@ -640,7 +586,7 @@ function Modifie({ profileId }) {
                 formData.technologies.map((tech, index) => (
                   <div
                     key={`${tech}-${index}`}
-                    className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-2 rounded-lg border-l-4 border-purple-600 tech-tag animate-slide-in"
+                    className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-2 rounded-lg border-l-4 border-turquoise tech-tag animate-slide-in"
                   >
                     <span className="font-medium text-gray-800">{tech}</span>
                     <button
@@ -662,8 +608,8 @@ function Modifie({ profileId }) {
             style={{ animationDelay: "0.2s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Link className="w-6 h-6 text-purple-600 icon-hover" />
-              <h2 className="text-2xl font-bold text-purple-600">
+              <LinkIcon className="w-6 h-6 text-turquoise icon-hover" />
+              <h2 className="text-2xl font-bold text-turquoise">
                 Contacts et Liens
               </h2>
             </div>
@@ -674,7 +620,7 @@ function Modifie({ profileId }) {
                   label: "Lien Portfolio",
                   type: "url",
                   placeholder: "https://mon-portfolio.com",
-                  required: false, // Les liens ne sont plus obligatoires
+                  required: false,
                 },
                 {
                   name: "email",
@@ -688,14 +634,14 @@ function Modifie({ profileId }) {
                   label: "Pseudo GitHub",
                   type: "text",
                   placeholder: "davididohou",
-                  required: false, // Les liens ne sont plus obligatoires
+                  required: false,
                 },
                 {
                   name: "linkedin",
                   label: "Pseudo LinkedIn",
                   type: "text",
                   placeholder: "david-idohou",
-                  required: false, // Les liens ne sont plus obligatoires
+                  required: false,
                 },
               ].map((field) => (
                 <div key={field.name}>
@@ -706,11 +652,11 @@ function Modifie({ profileId }) {
                   <input
                     type={field.type}
                     name={field.name}
-                    value={formData[field.name]}
+                    value={formData?.[field.name] || ""}
                     onChange={handleInputChange}
                     placeholder={field.placeholder}
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
-                      formData[field.name] !== originalData[field.name]
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-turquoise focus:border-transparent transition-all duration-200 ${
+                      formData?.[field.name] !== originalData?.[field.name]
                         ? "changes-indicator"
                         : ""
                     }`}
@@ -727,8 +673,8 @@ function Modifie({ profileId }) {
             style={{ animationDelay: "0.3s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Star className="w-6 h-6 text-orange-500 icon-hover" />
-              <h2 className="text-2xl font-bold text-orange-500">
+              <Star className="w-6 h-6 text-coral-dark icon-hover" />
+              <h2 className="text-2xl font-bold text-coral-dark">
                 Statistiques
               </h2>
             </div>
@@ -740,10 +686,10 @@ function Modifie({ profileId }) {
                 <input
                   type="number"
                   name="projects"
-                  value={formData.projects}
+                  value={formData?.projects || ""}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
-                    formData.projects !== originalData.projects
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-turquoise focus:border-transparent transition-all duration-200 ${
+                    formData?.projects !== originalData?.projects
                       ? "changes-indicator"
                       : ""
                   }`}
@@ -757,13 +703,13 @@ function Modifie({ profileId }) {
                 <input
                   type="number"
                   name="rating"
-                  value={formData.rating}
+                  value={formData?.rating || ""}
                   onChange={handleInputChange}
                   step="0.1"
                   min="0"
                   max="5"
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ${
-                    formData.rating !== originalData.rating
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-turquoise focus:border-transparent transition-all duration-200 ${
+                    formData?.rating !== originalData?.rating
                       ? "changes-indicator"
                       : ""
                   }`}
@@ -779,11 +725,11 @@ function Modifie({ profileId }) {
             style={{ animationDelay: "0.4s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Palette className="w-6 h-6 text-purple-600 icon-hover" />
-              <h2 className="text-2xl font-bold text-purple-600">
+              <Palette className="w-6 h-6 text-turquoise icon-hover" />
+              <h2 className="text-2xl font-bold text-turquoise">
                 Couleur de Thème <span className="text-red-500">*</span>
               </h2>
-              {formData.gradient !== originalData.gradient && (
+              {formData?.gradient !== originalData?.gradient && (
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse-soft"></div>
               )}
             </div>
@@ -793,22 +739,24 @@ function Modifie({ profileId }) {
               </label>
               <input
                 type="color"
-                value={formData.gradient}
+                value={formData?.gradient || "#FF6F61"}
                 onChange={handleGradientColorChange}
                 className="w-12 h-10 cursor-pointer border border-gray-300 rounded-lg hover:scale-105 transition-transform duration-200"
                 required
               />
               <span
                 className="ml-2 text-sm font-mono text-gray-700 bg-gray-100 px-2 py-1 rounded transition-colors duration-200"
-                style={{ color: formData.gradient }}
+                style={{ color: formData?.gradient || "#FF6F61" }}
               >
-                {formData.gradient}
+                {formData?.gradient || "#FF6F61"}
               </span>
             </div>
             <div
               className="h-4 rounded-lg mt-3 transition-all duration-300"
               style={{
-                background: `linear-gradient(135deg, ${formData.gradient}, #9333EA)`,
+                background: `linear-gradient(135deg, ${
+                  formData?.gradient || "#FF6F61"
+                }, #40E0D0)`,
               }}
             />
           </div>
@@ -821,7 +769,7 @@ function Modifie({ profileId }) {
               disabled={!hasChanges}
               className={`px-8 py-4 rounded-xl font-semibold text-lg shadow-lg flex items-center gap-3 transition-all duration-200 ${
                 hasChanges
-                  ? "bg-purple-600 text-white hover:bg-purple-700 button-hover"
+                  ? "bg-coral text-white hover:bg-coral-dark button-hover"
                   : "bg-gray-400 text-gray-600 cursor-not-allowed"
               }`}
             >

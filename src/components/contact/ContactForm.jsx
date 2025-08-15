@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Send } from "lucide-react";
-import LoadingButton from "../LoadingButton";
+import LoadingButton from "../Spinner/LoadingButton";
 import Toast from "../Toast";
 
 const ContactForm = () => {

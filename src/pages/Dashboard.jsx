@@ -1,9 +1,23 @@
-import { CheckCircle, PlusCircle, Pencil, Info } from "lucide-react";
+import { CheckCircle, PlusCircle, Pencil, Info, LogOut } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import LoadingButton from "../components/Spinner/LoadingButton";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout(); // si logout est async
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-900 font-sans text-gray-100">
@@ -17,12 +31,14 @@ const Dashboard = () => {
               Connecté en tant que:{" "}
               <strong className="text-turquoise">{user.email}</strong>
             </span>
-            <button
-              onClick={logout}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg transition-all duration-300 w-full sm:w-auto"
+            <LoadingButton
+              onClick={handleLogout}
+              loading={isLoggingOut}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg transition-all duration-300 w-full sm:w-auto flex items-center justify-center space-x-2"
             >
-              Déconnexion
-            </button>
+              {!isLoggingOut && <LogOut size={20} />}
+              <span>{isLoggingOut ? "En cours..." : "Déconnexion"}</span>
+            </LoadingButton>
           </div>
         </div>
       </nav>

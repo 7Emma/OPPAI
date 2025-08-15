@@ -11,17 +11,27 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Initialiser depuis localStorage si possible
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => !!localStorage.getItem("user")
+  );
 
   const login = (email) => {
-    setUser({ email });
+    const userData = { email };
+    setUser(userData);
     setIsAuthenticated(true);
+    localStorage.setItem("user", JSON.stringify(userData)); // persister
   };
 
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
+    localStorage.removeItem("user"); // supprimer persistance
   };
 
   return (

@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EmailStep from "../components/authentification/EmailStep";
 import CodeVerificationStep from "../components/authentification/CodeVerificationStep";
 import { useAuth } from "./AuthContext";
 
 const AuthForm = () => {
-  const [step, setStep] = useState("email");
-  const [email, setEmail] = useState("");
+  const { login } = useAuth();
+
+  const [step, setStep] = useState(
+    () => localStorage.getItem("authStep") || "email"
+  );
+  const [email, setEmail] = useState(
+    () => localStorage.getItem("authEmail") || ""
+  );
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { login } = useAuth();
+
+  useEffect(() => {
+    localStorage.setItem("authStep", step);
+  }, [step]);
+
+  useEffect(() => {
+    localStorage.setItem("authEmail", email);
+  }, [email]);
 
   const sendVerificationCode = async () => {
     setLoading(true);
@@ -26,6 +39,8 @@ const AuthForm = () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     if (code === "123456") {
       login(email);
+      localStorage.removeItem("authStep"); // reset step après login
+      localStorage.removeItem("authEmail");
     } else {
       setError("Code invalide.");
     }

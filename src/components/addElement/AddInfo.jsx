@@ -7,7 +7,7 @@ import {
   Palette,
   Plus,
   X,
-  Link,
+  Link as LinkIcon,
   Code,
   Cloud,
   Database,
@@ -22,7 +22,8 @@ import {
   Eye,
   Sparkles,
 } from "lucide-react";
-import LoadingButton from "../LoadingButton";
+import { Link } from "react-router-dom";
+import LoadingButton from "../Spinner/LoadingButton";
 import Toast from "../Toast";
 
 // Sélection des spécialités reliées aux icones
@@ -163,7 +164,7 @@ function AddInfo() {
   const SelectedIcon = specialityIcons[formData.speciality] || Book;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-800 p-4 md:p-8 font-sans">
+    <div className="min-h-screen relative bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-800 p-4 md:p-8 font-sans">
       <style jsx>{`
         @keyframes fadeInUp {
           from {
@@ -236,6 +237,14 @@ function AddInfo() {
           transition: transform 0.3s ease;
         }
       `}</style>
+
+      {/* Bouton Retour */}
+      <Link
+        to="/dashboard"
+        className="fixed left-4 top-4 text-xl bg-gradient-to-r from-red-400 to-cyan-400 text-white px-4 py-2 rounded-full shadow hover:opacity-80 transition"
+      >
+        ← Retour
+      </Link>
 
       <div className="max-w-4xl mx-auto">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -454,7 +463,7 @@ function AddInfo() {
             style={{ animationDelay: "0.2s" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Link className="w-6 h-6 text-[#40E0D0] icon-hover" />
+              <LinkIcon className="w-6 h-6 text-[#40E0D0] icon-hover" />
               <h2 className="text-2xl font-bold text-[#40E0D0]">
                 Contacts et Liens
               </h2>

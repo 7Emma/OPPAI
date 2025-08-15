@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   Users,
   Laptop,
@@ -17,7 +15,10 @@ import {
   GitBranch,
   Coffee,
   Zap,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
+import teamPhotos from "../Datas/teamPhotos";
 
 const roleData = {
   "Frontend Developers": {
@@ -69,54 +70,178 @@ const teamStats = [
     icon: <Users size={24} />,
     value: "10+",
     label: "Développeurs",
-    color: "text-coral",
+    color: "text-orange-400",
   },
   {
     icon: <GitBranch size={24} />,
     value: "25+",
     label: "Projets",
-    color: "text-turquoise",
+    color: "text-cyan-400",
   },
   {
     icon: <Coffee size={24} />,
     value: "1000+",
     label: "Cafés Bus",
-    color: "text-turquoise-light",
+    color: "text-teal-400",
   },
   {
     icon: <Award size={24} />,
     value: "2+",
     label: "Années",
-    color: "text-coral-light",
+    color: "text-pink-400",
   },
 ];
 
+const PhotoCarousel = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Auto-défilement
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === teamPhotos.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying]);
+
+  const goToPrevious = () => {
+    setCurrentIndex(
+      currentIndex === 0 ? teamPhotos.length - 1 : currentIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    setCurrentIndex(
+      currentIndex === teamPhotos.length - 1 ? 0 : currentIndex + 1
+    );
+  };
+
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
+
+  return (
+    <div className="relative">
+      {/* Carousel principal */}
+      <div
+        className="relative w-full h-96 rounded-2xl overflow-hidden shadow-2xl border border-orange-500/30"
+        onMouseEnter={() => setIsAutoPlaying(false)}
+        onMouseLeave={() => setIsAutoPlaying(true)}
+      >
+        <div
+          className="flex transition-transform duration-700 ease-in-out h-full"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {teamPhotos.map((photo) => (
+            <div
+              key={photo.id}
+              className="w-full h-full flex-shrink-0 relative"
+            >
+              <img
+                src={photo.url}
+                alt={photo.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              <div className="absolute bottom-6 left-6 text-white">
+                <h4 className="text-xl font-bold mb-2">{photo.title}</h4>
+                <p className="text-gray-300">{photo.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Boutons de navigation */}
+        <button
+          onClick={goToPrevious}
+          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+          aria-label="Photo précédente"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <button
+          onClick={goToNext}
+          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+          aria-label="Photo suivante"
+        >
+          <ChevronRight size={24} />
+        </button>
+
+        {/* Indicateurs */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {teamPhotos.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentIndex
+                  ? "bg-orange-400 scale-125"
+                  : "bg-white/50 hover:bg-white/75"
+              }`}
+              aria-label={`Aller à la photo ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Compteur */}
+        <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm font-mono">
+          {currentIndex + 1} / {teamPhotos.length}
+        </div>
+      </div>
+
+      {/* Miniatures */}
+      <div className="mt-6 grid grid-cols-6 gap-3">
+        {teamPhotos.map((photo, index) => (
+          <button
+            key={photo.id}
+            onClick={() => goToSlide(index)}
+            className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+              index === currentIndex
+                ? "border-orange-400 scale-105"
+                : "border-gray-600 hover:border-gray-400"
+            }`}
+          >
+            <img
+              src={photo.url}
+              alt={photo.title}
+              className="w-full h-full object-cover"
+            />
+            {index === currentIndex && (
+              <div className="absolute inset-0 bg-orange-400/20" />
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const RoleCard = ({ role, data, onHover }) => (
-  <motion.div
-    whileHover={{
-      scale: 1.05,
-      boxShadow: "0px 20px 40px rgba(0, 206, 209, 0.15)",
-      borderColor: "rgba(255, 127, 80, 0.8)",
-    }}
-    onHoverStart={() => onHover(role)}
-    onHoverEnd={() => onHover(null)}
-    className="bg-gradient-to-br from-slate-800/60 to-slate-900/60 rounded-xl p-6 border border-turquoise/20 hover:border-coral/50 transition-all duration-500 backdrop-blur-sm group cursor-pointer"
+  <div
+    className="bg-gradient-to-br from-slate-800/60 to-slate-900/60 rounded-xl p-6 border border-cyan-500/20 hover:border-orange-500/50 transition-all duration-500 backdrop-blur-sm group cursor-pointer transform hover:scale-105 hover:shadow-2xl"
+    onMouseEnter={() => onHover(role)}
+    onMouseLeave={() => onHover(null)}
     role="button"
     tabIndex={0}
     aria-label={`Rôle: ${role}`}
   >
     {/* Header avec icône et compteur */}
     <div className="flex items-center justify-between mb-4">
-      <div className="w-12 h-12 bg-gradient-to-r from-coral to-turquoise rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+      <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-cyan-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
         {data.icon}
       </div>
-      <span className="bg-turquoise/20 text-turquoise px-3 py-1 rounded-full text-sm font-mono font-bold">
+      <span className="bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full text-sm font-mono font-bold">
         {data.count}
       </span>
     </div>
 
     {/* Titre */}
-    <h4 className="text-lg font-semibold text-white mb-3 group-hover:text-turquoise transition-colors duration-300">
+    <h4 className="text-lg font-semibold text-white mb-3 group-hover:text-cyan-400 transition-colors duration-300">
       {role}
     </h4>
 
@@ -126,14 +251,14 @@ const RoleCard = ({ role, data, onHover }) => (
     </p>
 
     {/* Expérience */}
-    <div className="flex items-center mb-3 text-coral-light text-sm">
+    <div className="flex items-center mb-3 text-pink-400 text-sm">
       <Calendar size={14} className="mr-2" />
       <span>{data.experience}</span>
     </div>
 
     {/* Technologies */}
     <div className="space-y-2">
-      <div className="flex items-center text-turquoise-light text-sm mb-2">
+      <div className="flex items-center text-teal-400 text-sm mb-2">
         <Code size={14} className="mr-2" />
         <span className="font-mono">Technologies:</span>
       </div>
@@ -141,7 +266,7 @@ const RoleCard = ({ role, data, onHover }) => (
         {data.technologies.map((tech, index) => (
           <span
             key={index}
-            className="bg-slate-700/50 text-turquoise-light px-2 py-1 rounded text-xs font-mono border border-slate-600 group-hover:border-turquoise/30 transition-colors duration-300"
+            className="bg-slate-700/50 text-teal-400 px-2 py-1 rounded text-xs font-mono border border-slate-600 group-hover:border-cyan-500/30 transition-colors duration-300"
           >
             {tech}
           </span>
@@ -151,9 +276,9 @@ const RoleCard = ({ role, data, onHover }) => (
 
     {/* Indicateur d'animation */}
     <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <div className="w-full h-1 bg-gradient-to-r from-coral via-turquoise to-coral rounded animate-pulse"></div>
+      <div className="w-full h-1 bg-gradient-to-r from-orange-500 via-cyan-500 to-orange-500 rounded animate-pulse"></div>
     </div>
-  </motion.div>
+  </div>
 );
 
 const TeamSection = () => {
@@ -169,58 +294,62 @@ const TeamSection = () => {
       {/* Animated background elements */}
       <div className="absolute inset-0 opacity-5">
         <div
-          className="absolute top-20 left-10 w-64 h-64 border border-turquoise rounded-full animate-spin"
+          className="absolute top-20 left-10 w-64 h-64 border border-cyan-500 rounded-full animate-spin"
           style={{ animationDuration: "20s" }}
         ></div>
         <div
-          className="absolute bottom-20 right-10 w-48 h-48 border border-coral rounded-full animate-spin"
+          className="absolute bottom-20 right-10 w-48 h-48 border border-orange-500 rounded-full animate-spin"
           style={{ animationDuration: "15s", animationDirection: "reverse" }}
         ></div>
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* En-tête */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16 animate-fade-in">
           <h2
             id="team-heading"
-            className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-coral via-turquoise to-coral bg-clip-text text-transparent font-mono"
+            className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-500 via-cyan-500 to-orange-500 bg-clip-text text-transparent font-mono"
           >
             &lt;Notre Équipe/&gt;
           </h2>
 
-          <div className="inline-block bg-gradient-to-r from-coral/10 to-turquoise/10 rounded-2xl p-8 border border-turquoise/30 backdrop-blur-sm">
+          <div className="inline-block bg-gradient-to-r from-orange-500/10 to-cyan-500/10 rounded-2xl p-8 border border-cyan-500/30 backdrop-blur-sm">
             <div className="flex items-center justify-center mb-4">
-              <Users size={48} className="text-coral mr-4" />
-              <Zap size={48} className="text-turquoise" />
+              <Users size={48} className="text-orange-500 mr-4" />
+              <Zap size={48} className="text-cyan-500" />
             </div>
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 font-mono">
               Collectif de Développeurs Passionnés
             </h3>
-            <p className="text-turquoise-light max-w-3xl text-lg leading-relaxed">
+            <p className="text-cyan-300 max-w-3xl text-lg leading-relaxed">
               Notre équipe rassemble des experts en développement logiciel, data
               science, cybersécurité, DevOps et intelligence artificielle.
               Ensemble, nous formons une force créative et technique
               exceptionnelle dédiée à l'innovation.
             </p>
           </div>
-        </motion.div>
+        </div>
+
+        {/* Section Photos d'Équipe */}
+        <div className="mb-16 animate-slide-in">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 font-mono">
+              📸 Moments d'Équipe
+            </h3>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Découvrez notre équipe en action : sessions de travail, moments de
+              convivialité et projets collaboratifs
+            </p>
+          </div>
+          <PhotoCarousel />
+        </div>
 
         {/* Statistiques */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
-        >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {teamStats.map((stat, index) => (
             <div
               key={index}
-              className="bg-slate-800/40 rounded-lg p-6 text-center border border-slate-700 hover:border-turquoise/50 transition-all duration-300 group backdrop-blur-sm"
+              className="bg-slate-800/40 rounded-lg p-6 text-center border border-slate-700 hover:border-cyan-500/50 transition-all duration-300 group backdrop-blur-sm transform hover:scale-105"
             >
               <div
                 className={`${stat.color} mx-auto mb-3 group-hover:scale-110 transition-transform duration-300`}
@@ -235,40 +364,27 @@ const TeamSection = () => {
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Informations sur la localisation */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-center mb-12"
-        >
-          <div className="inline-flex items-center bg-slate-800/50 rounded-full px-6 py-3 border border-turquoise/30">
-            <MapPin size={20} className="text-coral mr-3" />
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center bg-slate-800/50 rounded-full px-6 py-3 border border-cyan-500/30">
+            <MapPin size={20} className="text-orange-500 mr-3" />
             <span className="text-white font-mono">
               Basé à Cotonou, Bénin 🇧🇯
             </span>
-            <span className="text-turquoise-light ml-3">|</span>
-            <span className="text-turquoise-light ml-3 font-mono">
-              Remote-First
-            </span>
+            <span className="text-cyan-300 ml-3">|</span>
+            <span className="text-cyan-300 ml-3 font-mono">Remote-First</span>
           </div>
-        </motion.div>
+        </div>
 
         {/* Grille des rôles */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {roles.map((role, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
+              className="animate-slide-in"
+              style={{ animationDelay: `${0.1 * index}s` }}
             >
               <RoleCard
                 role={role}
@@ -276,19 +392,14 @@ const TeamSection = () => {
                 isHovered={hoveredRole === role}
                 onHover={setHoveredRole}
               />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Call to action */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="text-center mt-16"
-        >
-          <div className="inline-block bg-gradient-to-r from-slate-800/50 to-slate-700/50 rounded-2xl p-8 border border-coral/30 backdrop-blur-sm">
-            <Star size={32} className="text-coral mx-auto mb-4" />
+        <div className="text-center mb-16">
+          <div className="inline-block bg-gradient-to-r from-slate-800/50 to-slate-700/50 rounded-2xl p-8 border border-orange-500/30 backdrop-blur-sm">
+            <Star size={32} className="text-orange-500 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-4 font-mono">
               Rejoignez Notre Aventure
             </h3>
@@ -298,38 +409,62 @@ const TeamSection = () => {
             </p>
             <a
               href="#contact"
-              className="inline-flex items-center bg-gradient-to-r from-coral to-turquoise px-8 py-3 rounded-full text-white font-semibold hover:from-coral-dark hover:to-turquoise-dark transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-coral/25"
+              className="inline-flex items-center bg-gradient-to-r from-orange-500 to-cyan-500 px-8 py-3 rounded-full text-white font-semibold hover:from-orange-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-orange-500/25"
             >
               <Users size={20} className="mr-2" />
               Nous Rejoindre
             </a>
           </div>
-        </motion.div>
-        <div className="flex justify-center">
-          <Link
-            to="/personal"
-            className="inline-flex items-center bg-coral px-8 py-3 mt-10 rounded-full text-white font-semibold hover:bg-rose-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
+        </div>
+
+        <div className="flex justify-center mb-10">
+          <a
+            href="/personal"
+            className="inline-flex items-center bg-orange-500 px-8 py-3 rounded-full text-white font-semibold hover:bg-rose-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             Visiter l'équipe
-          </Link>
+          </a>
         </div>
-        {/**Pour ajouter les infos */}
-        <div className="text-center p-6 bg-slate-800 rounded-lg shadow-lg mt-10">
+
+        {/* Pour ajouter les infos */}
+        <div className="text-center p-6 bg-slate-800 rounded-lg shadow-lg">
           <p className="mb-4 text-white">
             Vous appartenez à la team{" "}
-            <span className="text-coral font-semibold">OPPAI</span> ? Ajoutez ou
-            modifiez vos informations !
+            <span className="text-orange-500 font-semibold">OPPAI</span> ?
+            Ajoutez ou modifiez vos informations !
           </p>
-          <Link
-            to="/dashboard"
-            className="inline-block px-6 py-2 bg-pink-300 hover:bg-coral text-white font-semibold rounded-lg transition-colors duration-300"
+          <a
+            href="/dashboard"
+            className="inline-block px-6 py-2 bg-pink-300 hover:bg-orange-500 text-white font-semibold rounded-lg transition-colors duration-300"
           >
             Ajouter
-          </Link>
+          </a>
         </div>
       </div>
 
-      <style jsx="true">{`
+      <style jsx='true'>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slide-in {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
         @keyframes float-gentle {
           0%,
           100% {
@@ -338,6 +473,14 @@ const TeamSection = () => {
           50% {
             transform: translateY(-10px) rotate(180deg);
           }
+        }
+
+        .animate-fade-in {
+          animation: fade-in 0.8s ease-out forwards;
+        }
+
+        .animate-slide-in {
+          animation: slide-in 0.6s ease-out forwards;
         }
 
         .animate-float-gentle {
