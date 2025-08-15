@@ -1,6 +1,6 @@
 import React from "react";
 
-const LoadingPage = ({ pageName = "contenu" }) => {
+function LoadingPage({ pageName = "contenu" }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-600 via-orange-500 to-slate-800 text-white font-sans">
       <div className="flex flex-col items-center gap-4">
@@ -11,6 +11,6 @@ const LoadingPage = ({ pageName = "contenu" }) => {
       </div>
     </div>
   );
-};
+}
 
 export default LoadingPage;

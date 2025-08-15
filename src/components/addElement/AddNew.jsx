@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import Toast from "../Toast";
 import LoadingButton from "../Spinner/LoadingButton";
 
-const AddNewsForm = () => {
+function AddNewsForm() {
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -508,6 +508,6 @@ const AddNewsForm = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AddNewsForm;

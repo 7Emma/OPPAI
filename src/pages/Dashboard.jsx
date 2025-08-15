@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import LoadingButton from "../components/Spinner/LoadingButton";
 
-const Dashboard = () => {
+function Dashboard() {
   const { user, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -84,6 +84,6 @@ const Dashboard = () => {
       </main>
     </div>
   );
-};
+}
 
 export default Dashboard;

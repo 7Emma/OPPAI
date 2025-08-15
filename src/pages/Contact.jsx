@@ -4,7 +4,7 @@ import SocialsAndProjects from "../components/contact/SocialsAndProjects";
 import ContactInfoAndStack from "../components/contact/ContactInfoAndStack";
 import ContactForm from "../components/contact/ContactForm";
 
-const ContactSection = () => {
+function ContactSection() {
   return (
     <section id="contact" className="py-20 px-4 relative overflow-hidden">
       {/* Background decorative elements */}
@@ -27,7 +27,7 @@ const ContactSection = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-coral via-turquoise to-coral bg-clip-text text-transparent font-mono">
+          <h2 className="text-4xl animate-pulse md:text-6xl font-bold mb-6 bg-gradient-to-r from-coral via-turquoise to-coral bg-clip-text text-transparent font-mono">
             &lt;Contact Us/&gt;
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
@@ -89,6 +89,6 @@ const ContactSection = () => {
       </div>
     </section>
   );
-};
+}
 
 export default ContactSection;

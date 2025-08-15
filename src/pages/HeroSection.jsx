@@ -5,7 +5,7 @@ import bg1 from "../assets/bg/bg1.jpeg";
 import bg2 from "../assets/bg/bg2.jpeg";
 import bg3 from "../assets/bg/bg3.jpeg";
 
-const HeroSection = ({ scrollToSection }) => {
+function HeroSection({ scrollToSection }) {
   const [currentWelcomeIndex, setCurrentWelcomeIndex] = useState(0);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const [floatingCount, setFloatingCount] = useState(100);
@@ -471,6 +471,6 @@ const HeroSection = ({ scrollToSection }) => {
       </motion.div>
     </section>
   );
-};
+}
 
 export default HeroSection;

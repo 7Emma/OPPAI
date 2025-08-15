@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Users,
   Laptop,
@@ -7,18 +7,15 @@ import {
   Brain,
   Shield,
   Smartphone,
-  Code,
   Star,
   MapPin,
-  Calendar,
   Award,
   GitBranch,
   Coffee,
   Zap,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
-import teamPhotos from "../Datas/teamPhotos";
+import PhotoCarousel from "../components/team/PhotoCarousel";
+import RoleCard from "../components/team/RoleCard";
 
 const roleData = {
   "Frontend Developers": {
@@ -92,195 +89,6 @@ const teamStats = [
   },
 ];
 
-const PhotoCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  // Auto-défilement
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === teamPhotos.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying]);
-
-  const goToPrevious = () => {
-    setCurrentIndex(
-      currentIndex === 0 ? teamPhotos.length - 1 : currentIndex - 1
-    );
-  };
-
-  const goToNext = () => {
-    setCurrentIndex(
-      currentIndex === teamPhotos.length - 1 ? 0 : currentIndex + 1
-    );
-  };
-
-  const goToSlide = (index) => {
-    setCurrentIndex(index);
-  };
-
-  return (
-    <div className="relative">
-      {/* Carousel principal */}
-      <div
-        className="relative w-full h-96 rounded-2xl overflow-hidden shadow-2xl border border-orange-500/30"
-        onMouseEnter={() => setIsAutoPlaying(false)}
-        onMouseLeave={() => setIsAutoPlaying(true)}
-      >
-        <div
-          className="flex transition-transform duration-700 ease-in-out h-full"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {teamPhotos.map((photo) => (
-            <div
-              key={photo.id}
-              className="w-full h-full flex-shrink-0 relative"
-            >
-              <img
-                src={photo.url}
-                alt={photo.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 text-white">
-                <h4 className="text-xl font-bold mb-2">{photo.title}</h4>
-                <p className="text-gray-300">{photo.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Boutons de navigation */}
-        <button
-          onClick={goToPrevious}
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
-          aria-label="Photo précédente"
-        >
-          <ChevronLeft size={24} />
-        </button>
-        <button
-          onClick={goToNext}
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
-          aria-label="Photo suivante"
-        >
-          <ChevronRight size={24} />
-        </button>
-
-        {/* Indicateurs */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {teamPhotos.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? "bg-orange-400 scale-125"
-                  : "bg-white/50 hover:bg-white/75"
-              }`}
-              aria-label={`Aller à la photo ${index + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Compteur */}
-        <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm font-mono">
-          {currentIndex + 1} / {teamPhotos.length}
-        </div>
-      </div>
-
-      {/* Miniatures */}
-      <div className="mt-6 grid grid-cols-6 gap-3">
-        {teamPhotos.map((photo, index) => (
-          <button
-            key={photo.id}
-            onClick={() => goToSlide(index)}
-            className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-              index === currentIndex
-                ? "border-orange-400 scale-105"
-                : "border-gray-600 hover:border-gray-400"
-            }`}
-          >
-            <img
-              src={photo.url}
-              alt={photo.title}
-              className="w-full h-full object-cover"
-            />
-            {index === currentIndex && (
-              <div className="absolute inset-0 bg-orange-400/20" />
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const RoleCard = ({ role, data, onHover }) => (
-  <div
-    className="bg-gradient-to-br from-slate-800/60 to-slate-900/60 rounded-xl p-6 border border-cyan-500/20 hover:border-orange-500/50 transition-all duration-500 backdrop-blur-sm group cursor-pointer transform hover:scale-105 hover:shadow-2xl"
-    onMouseEnter={() => onHover(role)}
-    onMouseLeave={() => onHover(null)}
-    role="button"
-    tabIndex={0}
-    aria-label={`Rôle: ${role}`}
-  >
-    {/* Header avec icône et compteur */}
-    <div className="flex items-center justify-between mb-4">
-      <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-cyan-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
-        {data.icon}
-      </div>
-      <span className="bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full text-sm font-mono font-bold">
-        {data.count}
-      </span>
-    </div>
-
-    {/* Titre */}
-    <h4 className="text-lg font-semibold text-white mb-3 group-hover:text-cyan-400 transition-colors duration-300">
-      {role}
-    </h4>
-
-    {/* Description */}
-    <p className="text-gray-400 text-sm mb-4 leading-relaxed">
-      {data.description}
-    </p>
-
-    {/* Expérience */}
-    <div className="flex items-center mb-3 text-pink-400 text-sm">
-      <Calendar size={14} className="mr-2" />
-      <span>{data.experience}</span>
-    </div>
-
-    {/* Technologies */}
-    <div className="space-y-2">
-      <div className="flex items-center text-teal-400 text-sm mb-2">
-        <Code size={14} className="mr-2" />
-        <span className="font-mono">Technologies:</span>
-      </div>
-      <div className="flex flex-wrap gap-1">
-        {data.technologies.map((tech, index) => (
-          <span
-            key={index}
-            className="bg-slate-700/50 text-teal-400 px-2 py-1 rounded text-xs font-mono border border-slate-600 group-hover:border-cyan-500/30 transition-colors duration-300"
-          >
-            {tech}
-          </span>
-        ))}
-      </div>
-    </div>
-
-    {/* Indicateur d'animation */}
-    <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <div className="w-full h-1 bg-gradient-to-r from-orange-500 via-cyan-500 to-orange-500 rounded animate-pulse"></div>
-    </div>
-  </div>
-);
-
 const TeamSection = () => {
   const [hoveredRole, setHoveredRole] = useState(null);
   const roles = Object.keys(roleData);
@@ -308,7 +116,7 @@ const TeamSection = () => {
         <div className="text-center mb-16 animate-fade-in">
           <h2
             id="team-heading"
-            className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-500 via-cyan-500 to-orange-500 bg-clip-text text-transparent font-mono"
+            className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-500 via-cyan-500 to-orange-500 bg-clip-text text-transparent font-mono animate-pulse"
           >
             &lt;Notre Équipe/&gt;
           </h2>
@@ -442,7 +250,7 @@ const TeamSection = () => {
         </div>
       </div>
 
-      <style jsx='true'>{`
+      <style jsx="true">{`
         @keyframes fade-in {
           from {
             opacity: 0;

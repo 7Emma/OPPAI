@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import { Mail, Copy, Code, Phone, MapPin, Clock } from "lucide-react";
 import { copyToClipboard } from "../../utils/copyToClipboard";
 
-
-const ContactInfoAndStack = () => {
+function ContactInfoAndStack() {
   const [copiedText, setCopiedText] = useState("");
 
   const contactInfo = [
@@ -63,19 +62,13 @@ const ContactInfoAndStack = () => {
               {info.icon}
             </div>
             <div className="flex-1">
-              <div className="text-gray-400 text-sm">
-                {info.label}
-              </div>
+              <div className="text-gray-400 text-sm">{info.label}</div>
               <div className="text-white font-semibold flex items-center">
                 {info.href.startsWith("http") ||
                 info.href.startsWith("mailto") ? (
                   <a
                     href={info.href}
-                    target={
-                      info.href.startsWith("http")
-                        ? "_blank"
-                        : undefined
-                    }
+                    target={info.href.startsWith("http") ? "_blank" : undefined}
                     rel={
                       info.href.startsWith("http")
                         ? "noopener noreferrer"
@@ -91,7 +84,11 @@ const ContactInfoAndStack = () => {
                 {info.copyable && (
                   <button
                     onClick={() =>
-                      copyToClipboard(info.value.replace(/[^\w@.-]/g, ""), info.label, setCopiedText)
+                      copyToClipboard(
+                        info.value.replace(/[^\w@.-]/g, ""),
+                        info.label,
+                        setCopiedText
+                      )
                     }
                     className="ml-2 text-gray-400 hover:text-turquoise transition-colors duration-300"
                     title={`Copier ${info.label}`}
@@ -133,17 +130,17 @@ const ContactInfoAndStack = () => {
       </div>
       {/* Copy notification for this component */}
       {copiedText && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-coral to-turquoise px-6 py-3 rounded-lg text-white font-semibold shadow-lg z-50"
-          >
-            ✓ {copiedText} copié !
-          </motion.div>
-        )}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className="fixed bottom-8 right-8 bg-gradient-to-r from-coral to-turquoise px-6 py-3 rounded-lg text-white font-semibold shadow-lg z-50"
+        >
+          ✓ {copiedText} copié !
+        </motion.div>
+      )}
     </div>
   );
-};
+}
 
-export default ContactInfoAndStack
+export default ContactInfoAndStack;

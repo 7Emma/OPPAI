@@ -3,7 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import AppRoutes from "./routes/AppRoutes";
 import RouteChangeHandler from "./components/RouteChangeHandler";
 
-export default function App() {
+function App() {
   return (
     <AuthProvider>
       <Router>
@@ -14,3 +14,5 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+export default App;

@@ -14,7 +14,7 @@ import team1 from "../assets/team/team1.jpeg";
 import team2 from "../assets/team/team2.jpeg";
 import team3 from "../assets/team/team3.jpeg";
 
-const AboutSection = () => {
+function AboutSection() {
   const [hoveredStat, setHoveredStat] = useState(null);
   const [typedText, setTypedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -563,6 +563,6 @@ const AboutSection = () => {
       </motion.div>
     </section>
   );
-};
+}
 
 export default AboutSection;

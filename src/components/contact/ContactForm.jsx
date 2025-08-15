@@ -3,7 +3,7 @@ import { Send } from "lucide-react";
 import LoadingButton from "../Spinner/LoadingButton";
 import Toast from "../Toast";
 
-const ContactForm = () => {
+function ContactForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -123,6 +123,6 @@ const ContactForm = () => {
       {toast && <Toast message={toast} />}
     </div>
   );
-};
+}
 
 export default ContactForm;

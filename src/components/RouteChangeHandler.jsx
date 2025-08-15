@@ -5,7 +5,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import LoadingPage from "./Spinner/LoadingPage";
 
-export default function RouteChangeHandler({ children }) {
+function RouteChangeHandler({ children }) {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [pageName, setPageName] = useState("");
@@ -35,3 +35,5 @@ export default function RouteChangeHandler({ children }) {
 
   return children;
 }
+
+export default RouteChangeHandler;

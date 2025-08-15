@@ -11,8 +11,7 @@ import {
 } from "lucide-react";
 import teamMembers from "../../Datas/personnel";
 
-const Personal = () => {
-
+function Personal() {
   const TechBadge = ({ tech, gradient }) => (
     <span
       className={`inline-block px-3 py-1 m-1 text-xs font-semibold text-white rounded-full bg-gradient-to-r ${gradient} shadow-md`}
@@ -271,6 +270,6 @@ const Personal = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Personal;

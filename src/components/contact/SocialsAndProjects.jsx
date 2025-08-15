@@ -1,9 +1,21 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Twitter, MessageCircle, Users, Code, Phone, Zap, Copy, ExternalLink, Coffee } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Twitter,
+  MessageCircle,
+  Users,
+  Code,
+  Phone,
+  Zap,
+  Copy,
+  ExternalLink,
+  Coffee,
+} from "lucide-react";
 import { copyToClipboard } from "../../utils/copyToClipboard";
 
-const SocialsAndProjects = () => {
+function SocialsAndProjects() {
   const [copiedText, setCopiedText] = useState("");
 
   const socialLinks = [
@@ -41,8 +53,16 @@ const SocialsAndProjects = () => {
     { icon: <Code size={16} />, name: "Développement Web", available: true },
     { icon: <Phone size={16} />, name: "Applications Mobile", available: true },
     { icon: <Zap size={16} />, name: "API & Microservices", available: true },
-    { icon: <Users size={16} />, name: "Consulting Technique", available: true },
-    { icon: <Coffee size={16} />, name: "Formations & Workshops", available: false },
+    {
+      icon: <Users size={16} />,
+      name: "Consulting Technique",
+      available: true,
+    },
+    {
+      icon: <Coffee size={16} />,
+      name: "Formations & Workshops",
+      available: false,
+    },
   ];
 
   return (
@@ -74,9 +94,7 @@ const SocialsAndProjects = () => {
                 {social.icon}
               </div>
               <div>
-                <div className="text-white font-semibold">
-                  {social.name}
-                </div>
+                <div className="text-white font-semibold">{social.name}</div>
                 <div className="text-turquoise-light text-sm font-mono">
                   {social.username}
                 </div>
@@ -92,12 +110,14 @@ const SocialsAndProjects = () => {
         {/* Git Clone Section */}
         <div className="bg-slate-900/50 rounded-xl p-4 border border-turquoise/30 mb-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-turquoise font-mono text-sm">
-              Terminal
-            </span>
+            <span className="text-turquoise font-mono text-sm">Terminal</span>
             <button
               onClick={() =>
-                copyToClipboard("git clone https://github.com/oppai-collective", "git command", setCopiedText)
+                copyToClipboard(
+                  "git clone https://github.com/oppai-collective",
+                  "git command",
+                  setCopiedText
+                )
               }
               className="text-gray-400 hover:text-turquoise transition-colors duration-300"
             >
@@ -134,17 +154,17 @@ const SocialsAndProjects = () => {
       </div>
       {/* Copy notification for this component */}
       {copiedText && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-coral to-turquoise px-6 py-3 rounded-lg text-white font-semibold shadow-lg z-50"
-          >
-            ✓ {copiedText} copié !
-          </motion.div>
-        )}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className="fixed bottom-8 right-8 bg-gradient-to-r from-coral to-turquoise px-6 py-3 rounded-lg text-white font-semibold shadow-lg z-50"
+        >
+          ✓ {copiedText} copié !
+        </motion.div>
+      )}
     </motion.div>
   );
-};
+}
 
-export default SocialsAndProjects
+export default SocialsAndProjects;

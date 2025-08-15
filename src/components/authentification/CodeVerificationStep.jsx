@@ -1,6 +1,6 @@
 import { Lock, CheckCircle, AlertCircle } from "lucide-react";
 
-const CodeVerificationStep = ({
+function CodeVerificationStep({
   email,
   code,
   setCode,
@@ -9,7 +9,7 @@ const CodeVerificationStep = ({
   loading,
   error,
   resendCode,
-}) => {
+}) {
   const handleCodeChange = (e) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 6);
     setCode(value);
@@ -83,6 +83,6 @@ const CodeVerificationStep = ({
       </div>
     </div>
   );
-};
+}
 
 export default CodeVerificationStep;

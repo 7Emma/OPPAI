@@ -8,7 +8,7 @@ import Services from "./Services";
 import Team from "./Team";
 import Contact from "./Contact";
 
-const HomePage = () => {
+function HomePage() {
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -22,7 +22,14 @@ const HomePage = () => {
       const scrollY = window.scrollY;
       setIsScrolled(scrollY > 50);
 
-      const sections = ["hero", "about", "projects", "services", "team", "contact"];
+      const sections = [
+        "hero",
+        "about",
+        "projects",
+        "services",
+        "team",
+        "contact",
+      ];
       let currentSection = "hero";
 
       sections.forEach((id) => {
@@ -47,16 +54,28 @@ const HomePage = () => {
         isBlogPage={false}
       />
       <main>
-        <section id="hero"><HeroSection /></section>
-        <section id="about"><About /></section>
-        <section id="projects"><Projects /></section>
-        <section id="services"><Services /></section>
-        <section id="team"><Team /></section>
-        <section id="contact"><Contact /></section>
+        <section id="hero">
+          <HeroSection />
+        </section>
+        <section id="about">
+          <About />
+        </section>
+        <section id="projects">
+          <Projects />
+        </section>
+        <section id="services">
+          <Services />
+        </section>
+        <section id="team">
+          <Team />
+        </section>
+        <section id="contact">
+          <Contact />
+        </section>
       </main>
       <Footer />
     </div>
   );
-};
+}
 
 export default HomePage;

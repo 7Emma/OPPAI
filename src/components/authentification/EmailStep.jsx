@@ -1,7 +1,7 @@
 import { Mail, ArrowRight, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const EmailStep = ({ email, setEmail, onSubmit, loading, error }) => {
+function EmailStep({ email, setEmail, onSubmit, loading, error }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (email.trim()) onSubmit();
@@ -74,6 +74,6 @@ const EmailStep = ({ email, setEmail, onSubmit, loading, error }) => {
       </div>
     </div>
   );
-};
+}
 
 export default EmailStep;
