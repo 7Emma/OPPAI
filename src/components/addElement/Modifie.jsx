@@ -24,8 +24,8 @@ import {
   RotateCcw,
   AlertCircle,
 } from "lucide-react";
-import LoadingButton from "../Spinner/LoadingButton";
-import Toast from "../Toast";
+import LoadingButton from "../common/LoadingButton";
+import Toast from "../common/Toast";
 import { Link } from "react-router-dom";
 
 // Sélection des spécialités reliées aux icones

@@ -23,8 +23,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import LoadingButton from "../Spinner/LoadingButton";
-import Toast from "../Toast";
+import LoadingButton from "../common/LoadingButton";
+import Toast from "../common/Toast";
 
 // Sélection des spécialités reliées aux icones
 const specialityIcons = {

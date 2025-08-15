@@ -1,5 +1,5 @@
 import { createContext, useState, useContext } from "react";
-import LoadingPage from "../components/Spinner/LoadingPage";
+import LoadingPage from "../components/common/LoadingPage";
 
 const LoadingContext = createContext();
 

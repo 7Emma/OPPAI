@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import LoadingPage from "./Spinner/LoadingPage";
+import LoadingPage from "./common/LoadingPage";
 
 function RouteChangeHandler({ children }) {
   const location = useLocation();

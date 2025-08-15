@@ -2,7 +2,7 @@ import { CheckCircle, PlusCircle, Pencil, Info, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
-import LoadingButton from "../components/Spinner/LoadingButton";
+import LoadingButton from "../components/common/LoadingButton";
 
 function Dashboard() {
   const { user, logout } = useAuth();

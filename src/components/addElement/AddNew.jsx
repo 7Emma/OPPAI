@@ -13,8 +13,8 @@ import {
   Eye,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import Toast from "../Toast";
-import LoadingButton from "../Spinner/LoadingButton";
+import Toast from "../common/Toast";
+import LoadingButton from "../common/LoadingButton";
 
 function AddNewsForm() {
   const [formData, setFormData] = useState({

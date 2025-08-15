@@ -8,7 +8,7 @@ import {
   Users,
   Shield,
 } from "lucide-react";
-import logo from "../assets/oppai_logo.svg";
+import logo from "../../assets/oppai_logo.svg";
 
 function Footer() {
   const currentYear = new Date().getFullYear();

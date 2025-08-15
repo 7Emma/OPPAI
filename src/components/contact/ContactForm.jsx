@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Send } from "lucide-react";
-import LoadingButton from "../Spinner/LoadingButton";
-import Toast from "../Toast";
+import LoadingButton from "../common/LoadingButton";
+import Toast from "../common/Toast";
 
 function ContactForm() {
   const [formData, setFormData] = useState({
