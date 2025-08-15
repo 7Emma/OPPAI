@@ -69,6 +69,7 @@ const Navbar = ({
     { id: "about", label: "À propos" },
     { id: "projects", label: "Projets" },
     { id: "services", label: "Services" },
+    { id: "team", label: "Equipes" },
   ];
 
   const blogItems = [
