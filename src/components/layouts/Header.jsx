@@ -73,8 +73,8 @@ const Navbar = ({
   ];
 
   const blogItems = [
-    { path: "/new", label: "Actualités" },
-    { path: "/personal", label: "Personnel" },
+    { path: "/Actualite", label: "Actualités" },
+    { path: "/Personnel", label: "Personnel" },
   ];
 
   return (

@@ -14,7 +14,7 @@ const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<HomePage />} />
     <Route
-      path="/new"
+      path="/Actualite"
       element={
         <BlogLayout>
           <New />
@@ -22,7 +22,7 @@ const AppRoutes = () => (
       }
     />
     <Route
-      path="/personal"
+      path="/Personnel"
       element={
         <BlogLayout>
           <Personal />
@@ -30,7 +30,7 @@ const AppRoutes = () => (
       }
     />
     <Route
-      path="/dashboard"
+      path="/Dashboard"
       element={
         <ProtectedRoute>
           <Dashboard />
@@ -38,7 +38,7 @@ const AppRoutes = () => (
       }
     />
     <Route
-      path="/add-info"
+      path="/Add-info"
       element={
         <ProtectedRoute>
           <AddInfo />
@@ -47,7 +47,7 @@ const AppRoutes = () => (
     />
 
     <Route
-      path="/add-new"
+      path="/Add-new"
       element={
         <ProtectedRoute>
           <AddNew />
@@ -55,7 +55,7 @@ const AppRoutes = () => (
       }
     />
     <Route
-      path="/edit-info"
+      path="/Edit-info"
       element={
         <ProtectedRoute>
           <Modifie />

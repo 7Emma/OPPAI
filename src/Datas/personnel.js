@@ -1,31 +1,18 @@
 import {
   Code,
   Database,
-  Globe,
-  Smartphone,
   Cloud,
   Monitor,
-  Cpu,
-  Palette,
-  Server,
   Layers,
   Brain,
-  Terminal,
 } from "lucide-react";
-import bhilal from "../assets/imges/bhilal.jpeg";
-import david from "../assets/imges/david.jpeg";
-import eddy from "../assets/imges/eddy.jpeg";
-import jp from "../assets/imges/jp.jpeg";
-import marcos from "../assets/imges/macos.jpeg";
-import emma from "../assets/imges/emma.jpeg";
 
-// Données de l'équipe
 const teamMembers = [
   {
     id: 1,
     name: "Eddy BONI",
     role: "Software Engineer",
-    image: eddy,
+    image: "https://i.imgur.com/UgkViDn.jpeg",
     technologies: ["Java", "Django", "HTML/CSS", "JavaScript", "C++/C"],
     speciality: "Full-Stack Development",
     description:
@@ -43,7 +30,7 @@ const teamMembers = [
     id: 2,
     name: "Emmanuel AGBOTOEDO",
     role: "Data Engineer",
-    image: emma,
+    image: "https://i.imgur.com/8VzcJa8.png",
     technologies: ["React", "Node.js", "Java", "Python", "C++", "Scala"],
     speciality: "Data Engineering & Analytics",
     description:
@@ -61,7 +48,7 @@ const teamMembers = [
     id: 3,
     name: "David IDOHOU",
     role: "Développeur Full Stack & Ingénieur IA",
-    image: david,
+    image: "https://i.imgur.com/GYib58e.jpeg",
     technologies: [
       "Python",
       "Django",
@@ -86,7 +73,7 @@ const teamMembers = [
     id: 4,
     name: "Jean-Paul GNIKPO",
     role: "Fullstack Developer",
-    image: jp,
+    image: "https://i.imgur.com/0yektOL.jpeg",
     technologies: ["PHP", "Laravel", "React", "C/C++", "Firebase"],
     speciality: "Web Development & Backend",
     description:
@@ -104,7 +91,7 @@ const teamMembers = [
     id: 5,
     name: "Marcos BATAMOUSSI",
     role: "DevOps Engineer",
-    image: marcos,
+    image: "https://i.imgur.com/v5AUyu4.jpeg",
     technologies: [
       "Docker",
       "Kubernetes",
@@ -129,7 +116,7 @@ const teamMembers = [
     id: 6,
     name: "Bhilal CHITOU",
     role: "Full-Stack Developer",
-    image: bhilal,
+    image: "https://i.imgur.com/mvDZhJH.jpeg",
     technologies: [
       "Vue.js",
       "Laravel",

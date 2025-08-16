@@ -1,8 +1,5 @@
-// src/components/RouteChangeHandler.jsx
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
 import LoadingPage from "./common/LoadingPage";
 
 function RouteChangeHandler({ children }) {
@@ -10,27 +7,35 @@ function RouteChangeHandler({ children }) {
   const [loading, setLoading] = useState(false);
   const [pageName, setPageName] = useState("");
 
+  const getVariant = (path) => {
+    //if (path.includes("dashboard")) return "gradient";
+    if (path.includes("profil")) return "dark";
+    return "default";
+  };
+
   useEffect(() => {
-    // Détecte le changement de route
-    //NProgress.start();
     setLoading(true);
 
-    // Nom de la page à partir du chemin
     const name =
       location.pathname === "/" ? "Accueil" : location.pathname.slice(1);
     setPageName(name);
 
-    // Simulation du temps de chargement
     const timer = setTimeout(() => {
-      //NProgress.done();
       setLoading(false);
-    }, 1600); // ici 0.6s
+    }, 5000); // tu ajustes selon ton feeling
 
     return () => clearTimeout(timer);
   }, [location]);
 
   if (loading) {
-    return <LoadingPage pageName={pageName} />;
+    return (
+      <LoadingPage
+        pageName={pageName}
+        variant={getVariant(location.pathname)}
+        showLogo={location.pathname === "/"}
+        logoText="OPPAI"
+      />
+    );
   }
 
   return children;

@@ -10,9 +10,9 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import team1 from "../assets/team/team1.jpeg";
-import team2 from "../assets/team/team2.jpeg";
-import team3 from "../assets/team/team3.jpeg";
+const team1 = "https://i.imgur.com/OuvAZ91.jpeg";
+const team2 = "https://i.imgur.com/0yektOL.jpeg";
+const team3 = "https://i.imgur.com/EbF910o.jpeg";
 
 function AboutSection() {
   const [hoveredStat, setHoveredStat] = useState(null);

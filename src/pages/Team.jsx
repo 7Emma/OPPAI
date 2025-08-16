@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Users,
   Laptop,
@@ -226,12 +227,12 @@ const TeamSection = () => {
         </div>
 
         <div className="flex justify-center mb-10">
-          <a
-            href="/personal"
+          <Link
+            to="/Personnel"
             className="inline-flex items-center bg-orange-500 px-8 py-3 rounded-full text-white font-semibold hover:bg-rose-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             Visiter l'équipe
-          </a>
+          </Link>
         </div>
 
         {/* Pour ajouter les infos */}
@@ -241,12 +242,12 @@ const TeamSection = () => {
             <span className="text-orange-500 font-semibold">OPPAI</span> ?
             Ajoutez ou modifiez vos informations !
           </p>
-          <a
-            href="/dashboard"
+          <Link
+            to="/Dashboard"
             className="inline-block px-6 py-2 bg-pink-300 hover:bg-orange-500 text-white font-semibold rounded-lg transition-colors duration-300"
           >
             Ajouter
-          </a>
+          </Link>
         </div>
       </div>
 

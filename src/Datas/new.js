@@ -1,4 +1,4 @@
-import img from '../assets/Img.jpeg'
+const img = "https://i.imgur.com/ZVsK6kQ.png"
 
 const newsData = [
   {

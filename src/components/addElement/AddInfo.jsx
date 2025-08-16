@@ -165,7 +165,7 @@ function AddInfo() {
 
   return (
     <div className="min-h-screen relative bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-800 p-4 md:p-8 font-sans">
-      <style jsx>{`
+      <style jsx='true'>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;

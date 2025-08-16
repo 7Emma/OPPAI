@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { Code, ChevronDown } from "lucide-react";
-import bg1 from "../assets/bg/bg1.jpeg";
-import bg2 from "../assets/bg/bg2.jpeg";
-import bg3 from "../assets/bg/bg3.jpeg";
+const bg1 = "https://i.imgur.com/LU836mv.jpeg";
+const bg2 = "https://i.imgur.com/aT0kUc7.jpeg";
+const bg3 = "https://i.imgur.com/OuvAZ91.jpeg";
 
 function HeroSection({ scrollToSection }) {
   const [currentWelcomeIndex, setCurrentWelcomeIndex] = useState(0);
