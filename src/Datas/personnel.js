@@ -48,7 +48,7 @@ const teamMembers = [
     speciality: "Data Engineering & Analytics",
     description:
       "Expert en ingénierie des données, Emmanuel conçoit et optimise les pipelines de données complexes. Il transforme les données brutes en insights précieux pour l'entreprise.",
-    portfolioLink: "https://peppy-crisp-b46439.netlify.app/",
+    portfolioLink: "https://emmanuelagbotoedo.netlify.app/",
     email: "emma@oppai.dev",
     github: "7Emma",
     linkedin: "emmanuel-mahoukpégo-agbotoedo-50a6bb351/",
