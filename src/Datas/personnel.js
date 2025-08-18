@@ -116,10 +116,8 @@ const teamMembers = [
       "React",
       "Next.js",
       "Tailwind CSS",
-      "Node.js",
       "PHP",
       "JavaScript",
-      "Bootstrap",
     ],
     speciality: "Frontend & Web Development",
     description:
