@@ -420,7 +420,7 @@ function HeroSection({ scrollToSection }) {
 
         {/* Flèche vers section suivante */}
         <motion.div
-          className="mt-16 justify-center relative left-6"
+          className="mt-8 justify-center relative left-6"
           variants={itemVariants}
         >
           <motion.div
