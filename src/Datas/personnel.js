@@ -1,11 +1,4 @@
-import {
-  Code,
-  Database,
-  Cloud,
-  Monitor,
-  Layers,
-  Brain,
-} from "lucide-react";
+import { Code, Database, Cloud, Monitor, Layers, Brain } from "lucide-react";
 
 const teamMembers = [
   {
@@ -74,7 +67,7 @@ const teamMembers = [
     name: "Jean-Paul GNIKPO",
     role: "Fullstack Developer",
     image: "https://i.imgur.com/0yektOL.jpeg",
-    technologies: ["PHP", "Laravel", "React", "C/C++", "Firebase"],
+    technologies: ["PHP", "Laravel", "React", "C/C++", "JavaScript"],
     speciality: "Web Development & Backend",
     description:
       "Développeur full-stack polyvalent, Jean-Paul excelle dans la création d'applications web modernes avec PHP/Laravel et React, offrant des solutions complètes et performantes.",
@@ -90,19 +83,19 @@ const teamMembers = [
   {
     id: 5,
     name: "Marcos BATAMOUSSI",
-    role: "DevOps Engineer",
+    role: "Full-Stack Developer",
     image: "https://i.imgur.com/v5AUyu4.jpeg",
     technologies: [
-      "Docker",
-      "Kubernetes",
-      "AWS",
+      "Django",
+      "JavaScript",
+      "React",
       "Python",
-      "Terraform",
-      "CI/CD",
+      "NodeJS",
+      "C/C++",
     ],
-    speciality: "DevOps & Cloud Infrastructure",
+    speciality: "Backend Developer",
     description:
-      "Expert DevOps, Marcos automatise les déploiements et optimise l'infrastructure cloud pour garantir une haute disponibilité et des performances optimales des applications.",
+      "En tant que développeur full-stack, Marcos sait coder aussi bien côté client que côté serveur. Il construit des applications web dynamiques, optimise les bases de données et s’assure que chaque fonctionnalité offre une expérience fluide et intuitive.",
     portfolioLink: "https://marcos-batamoussi-devops.io",
     email: "marcos@oppai.dev",
     github: "marcosbata",
