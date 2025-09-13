@@ -1,45 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserPlus } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
+import { addUser } from "../../services/api"; // <-- notre API centralisée
 import Toast from "../common/Toast"; // adapte le chemin si besoin
+import { useAuth } from "../../context/AuthContext";
 
 const AddUser = () => {
   const [email, setEmail] = useState("");
-  const [toast, setToast] = useState(null);
   const [password, setPassword] = useState("");
-  const { logout } = useAuth();
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const showToast = (message, type = "success") => {
-    setToast({ message, type });
-  };
-
+  const showToast = (message, type = "success") => setToast({ message, type });
   const closeToast = () => setToast(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/admin/register-developer",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Il est plus sûr de passer le token avec l'en-tête 'x-auth-token' comme on l'a configuré
-            "x-auth-token": localStorage.getItem("token"),
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
-      // ...
+      // Appel à l'API centralisée
+      await addUser({ email, password });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Erreur");
-
-      showToast("Utilisateur ajouté avec succès !", "success"); // <-- ici
+      showToast("Utilisateur ajouté avec succès !", "success");
       navigate("/admin?tab=users");
     } catch (err) {
-      showToast(err.message, "error"); // <-- ici
+      showToast(err.response?.data?.message || err.message, "error");
     }
   };
 
@@ -138,6 +123,14 @@ const AddUser = () => {
               </div>
             </form>
           </div>
+          {/* Toast */}
+          {toast && (
+            <Toast
+              message={toast.message}
+              type={toast.type}
+              onClose={closeToast}
+            />
+          )}
         </main>
       </div>
     </div>

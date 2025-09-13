@@ -8,7 +8,7 @@ import {
   Search,
   Filter,
 } from "lucide-react";
-import { getNews } from "../../services/api"; // ton axios instance
+import { getNews } from "../../services/api";
 
 const categories = ["Tous", "Technologie", "Business", "Mise à jour", "Équipe"];
 
