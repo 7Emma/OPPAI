@@ -17,25 +17,26 @@ export const AuthProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    () => !!localStorage.getItem("user")
-  );
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
 
-  const login = (email) => {
-    const userData = { email };
+  const isAuthenticated = !!user && !!token;
+
+  const login = (userData, jwtToken) => {
     setUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify(userData)); // persister
+    setToken(jwtToken);
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("token", jwtToken);
   };
 
   const logout = () => {
     setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem("user"); // supprimer persistance
+    setToken(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

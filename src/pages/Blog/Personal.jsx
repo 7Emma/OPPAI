@@ -1,4 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getProfiles } from "../../services/api";
+import {
+  Cloud,
+  Database,
+  Monitor,
+  Network,
+  Bug,
+  Layout,
+  Smartphone,
+} from "lucide-react";
 import {
   Code,
   ExternalLink,
@@ -9,36 +19,118 @@ import {
   Award,
   Users,
 } from "lucide-react";
-import teamMembers from "../../Datas/personnel";
+import { Link } from "react-router-dom";
+
+// Component for a tech badge
+const TechBadge = ({ tech, gradient }) => (
+  <span
+    className="inline-block px-3 py-1 m-1 text-xs font-semibold text-white rounded-full shadow-md"
+    style={{ background: `linear-gradient(135deg, ${gradient}, #40E0D0)` }}
+  >
+    {tech}
+  </span>
+);
+
+// Component for a stat card
+const StatCard = ({ icon: Icon, label, value, color }) => (
+  <div className="flex items-center space-x-2 text-sm">
+    <Icon className={`w-4 h-4 ${color}`} />
+    <span className="text-gray-300">{label}:</span>
+    <span className="font-semibold text-white">{value}</span>
+  </div>
+);
+
+// Component for a social link
+const SocialLink = ({ href, icon: Icon, label }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-300 group"
+    title={label}
+  >
+    <Icon className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+  </a>
+);
+
+// Selection of specialties related to icons
+const specialityIcons = {
+  "Développeur Full Stack": Code,
+  "Ingénieur IA": Cloud,
+  Backend: Database,
+  Frontend: Monitor,
+  DevOps: Network,
+  "QA Analyst": Bug,
+  "Data Engineer": Database,
+  Mobile: Smartphone,
+  "UI/UX Designer": Layout,
+};
 
 function Personal() {
-  const TechBadge = ({ tech, gradient }) => (
-    <span
-      className={`inline-block px-3 py-1 m-1 text-xs font-semibold text-white rounded-full bg-gradient-to-r ${gradient} shadow-md`}
-    >
-      {tech}
-    </span>
-  );
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const StatCard = ({ icon: Icon, label, value, color }) => (
-    <div className="flex items-center space-x-2 text-sm">
-      <Icon className={`w-4 h-4 ${color}`} />
-      <span className="text-gray-300">{label}:</span>
-      <span className="font-semibold text-white">{value}</span>
-    </div>
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await getProfiles();
+        setTeamMembers(response.data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des profils:", err);
+        setError("Erreur lors du chargement des profils.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTeamMembers();
+  }, []);
+  // Calculate stats based on fetched data
+  const totalProjects = teamMembers.reduce(
+    (sum, member) => sum + member.projects,
+    0
   );
+  const averageRating =
+    teamMembers.length > 0
+      ? (
+          teamMembers.reduce((sum, member) => sum + member.rating, 0) /
+          teamMembers.length
+        ).toFixed(1)
+      : "0";
+  const uniqueTechnologies = Array.from(
+    new Set(teamMembers.flatMap((member) => member.technologies))
+  ).length;
 
-  const SocialLink = ({ href, icon: Icon, label }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-300 group"
-      title={label}
-    >
-      <Icon className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
-    </a>
-  );
+  // Conditional Rendering
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+        <p>Chargement des profils...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-red-500">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (teamMembers.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white p-4 text-center">
+        <p className="text-xl mb-4">Aucun profil de développeur trouvé.</p>
+        <Link
+          to="/dashboard/add-info"
+          className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
+        >
+          Créer un profil
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-20 px-4">
@@ -78,7 +170,9 @@ function Personal() {
             <div className="flex items-center space-x-3">
               <Award className="w-8 h-8 text-turquoise" />
               <div>
-                <div className="text-2xl font-bold text-white">240+</div>
+                <div className="text-2xl font-bold text-white">
+                  {totalProjects}+
+                </div>
                 <div className="text-turquoise text-sm">Projets</div>
               </div>
             </div>
@@ -87,7 +181,9 @@ function Personal() {
             <div className="flex items-center space-x-3">
               <Star className="w-8 h-8 text-purple-400" />
               <div>
-                <div className="text-2xl font-bold text-white">4.8</div>
+                <div className="text-2xl font-bold text-white">
+                  {averageRating}
+                </div>
                 <div className="text-purple-400 text-sm">Satisfaction</div>
               </div>
             </div>
@@ -96,7 +192,9 @@ function Personal() {
             <div className="flex items-center space-x-3">
               <Code className="w-8 h-8 text-green-400" />
               <div>
-                <div className="text-2xl font-bold text-white">15+</div>
+                <div className="text-2xl font-bold text-white">
+                  {uniqueTechnologies}+
+                </div>
                 <div className="text-green-400 text-sm">Technologies</div>
               </div>
             </div>
@@ -106,15 +204,18 @@ function Personal() {
         {/* Team Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member) => {
-            const IconComponent = member.icon;
+            const IconComponent = specialityIcons[member.speciality] || Users;
             return (
               <div
-                key={member.id}
+                key={member._id}
                 className="group relative bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50 hover:border-slate-600/50 transition-all duration-500 hover:shadow-2xl hover:shadow-coral/20 hover:-translate-y-2"
               >
                 {/* Background Gradient */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${member.gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-500`}
+                  className="absolute inset-0 opacity-20 rounded-2xl transition-opacity duration-500"
+                  style={{
+                    background: `linear-gradient(135deg, ${member.gradient}, #40E0D0)`,
+                  }}
                 ></div>
 
                 {/* Content */}
@@ -127,30 +228,10 @@ function Personal() {
                           src={member.image}
                           alt={member.name}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          onError={(e) => {
-                            // Fallback si l'image ne charge pas
-                            e.target.style.display = "none";
-                            e.target.nextSibling.style.display = "flex";
-                          }}
                         />
-                        {/* Fallback avec icône si l'image ne charge pas */}
-                        <div
-                          className={`absolute inset-0 bg-gradient-to-br ${member.gradient} flex items-center justify-center hidden`}
-                        >
-                          <IconComponent className="w-12 h-12 text-white" />
-                        </div>
-                        {/* Overlay gradient subtil */}
-                        <div
-                          className={`absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                        ></div>
                       </div>
-                      {/* Indicateur en ligne */}
-                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-slate-800">
-                        <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                      </div>
-                      {/* Badge spécialité */}
                       <div
-                        className={`absolute -bottom-2 left-1/2 transform -translate-x-1/2 p-2 rounded-full bg-gradient-to-r ${member.gradient} shadow-lg`}
+                        className={`absolute -bottom-2 left-1/2 transform -translate-x-1/2 p-2 rounded-full bg-gradient-to-r from-[#FF6F61] to-[#40E0D0] shadow-lg`}
                       >
                         <IconComponent className="w-4 h-4 text-white" />
                       </div>
@@ -159,7 +240,7 @@ function Personal() {
                       {member.name}
                     </h3>
                     <p
-                      className={`text-sm font-medium bg-gradient-to-r ${member.gradient} bg-clip-text text-transparent`}
+                      className={`text-sm font-medium bg-gradient-to-r from-[#FF6F61] to-[#40E0D0] bg-clip-text text-transparent`}
                     >
                       {member.role}
                     </p>
@@ -168,7 +249,7 @@ function Personal() {
                   {/* Speciality */}
                   <div className="mb-4">
                     <div
-                      className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r ${member.gradient} text-white text-xs font-semibold`}
+                      className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r from-[#FF6F61] to-[#40E0D0] text-white text-xs font-semibold`}
                     >
                       {member.speciality}
                     </div>
@@ -235,7 +316,7 @@ function Personal() {
                       href={member.portfolioLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r ${member.gradient} text-white font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300`}
+                      className={`inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#FF6F61] to-[#40E0D0] text-white font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300`}
                     >
                       <span>Portfolio</span>
                       <ExternalLink className="w-4 h-4" />
@@ -246,27 +327,27 @@ function Personal() {
             );
           })}
         </div>
+      </div>
 
-        {/* Call to Action */}
-        <div className="text-center mt-16 p-8 bg-gradient-to-r from-coral/10 to-turquoise/10 rounded-2xl border border-coral/20">
-          <h3 className="text-2xl font-bold text-white mb-4">
-            Prêt à travailler avec notre équipe ?
-          </h3>
-          <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-            Contactez-nous pour discuter de votre projet et découvrir comment
-            notre équipe d'experts peut transformer vos idées en réalité
-            technologique.
-          </p>
+      {/* Call to Action */}
+      <div className="text-center mt-16 p-8 bg-gradient-to-r from-coral/10 to-turquoise/10 rounded-2xl border border-coral/20">
+        <h3 className="text-2xl font-bold text-white mb-4">
+          Prêt à travailler avec notre équipe ?
+        </h3>
+        <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+          Contactez-nous pour discuter de votre projet et découvrir comment
+          notre équipe d'experts peut transformer vos idées en réalité
+          technologique.
+        </p>
 
-          <a
-            href="https://wa.me/2290191732432?text=Bonjour%2C%20je%20souhaite%20d%C3%A9marrer%20un%20projet%20avec%20vous"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block px-8 py-3 bg-gradient-to-r from-coral to-coral-dark text-white rounded-lg font-medium hover:from-coral-dark hover:to-coral transform hover:scale-105 transition-all duration-300 shadow-lg"
-          >
-            Démarrer un projet
-          </a>
-        </div>
+        <a
+          href="https://wa.me/2290191732432?text=Bonjour%2C%20je%20souhaite%20d%C3%A9marrer%20un%20projet%20avec%20vous"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-8 py-3 bg-gradient-to-r from-coral to-coral-dark text-white rounded-lg font-medium hover:from-coral-dark hover:to-coral transform hover:scale-105 transition-all duration-300 shadow-lg"
+        >
+          Démarrer un projet
+        </a>
       </div>
     </div>
   );

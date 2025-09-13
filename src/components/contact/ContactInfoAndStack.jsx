@@ -10,15 +10,15 @@ function ContactInfoAndStack() {
     {
       icon: <Mail size={20} />,
       label: "Email Principal",
-      value: "dev@oppai-collective.fr",
-      href: "mailto:dev@oppai-collective.fr",
+      value: "oppaicdev@gmail.com",
+      href: "mailto:oppaicdev@gmail.com",
       copyable: true,
     },
     {
       icon: <Phone size={20} />,
       label: "WhatsApp Business",
-      value: "+229 XX XX XX XX",
-      href: "https://wa.me/229xxxxxxxx",
+      value: "+229 01 91 73 24 32",
+      href: "https://wa.me/2290191732432",
       copyable: true,
     },
     {

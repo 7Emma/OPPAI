@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createProfile, getProfiles } from "../../services/api";
 import {
   Save,
   User,
@@ -69,7 +70,21 @@ function AddInfo() {
   };
 
   useEffect(() => {
-    setIsVisible(true);
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfiles(); // Récupère le profil de l'utilisateur connecté
+        if (response.data) {
+          setFormData(response.data); // Préremplir le formulaire avec les données existantes
+        }
+      } catch (error) {
+        console.log("Pas de profil existant, formulaire vide.");
+        // Si pas de profil, le formulaire reste vide (initial state)
+      } finally {
+        setIsVisible(true);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   const handleInputChange = (e) => {
@@ -125,7 +140,7 @@ function AddInfo() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Vérification de tous les champs de formData
@@ -154,18 +169,26 @@ function AddInfo() {
     setIsLoading(true);
 
     // Simuler une requête API
-    setTimeout(() => {
-      console.log("Données formatées:", JSON.stringify(formData, null, 2));
+    try {
+      const response = await createProfile(formData);
+      console.log("Données envoyées:", response.data);
+      showToast("Profil mis à jour avec succès !");
+    } catch (error) {
+      console.error(
+        "Erreur lors de la soumission du formulaire:",
+        error.response?.data?.message || error.message
+      );
+      showToast("Erreur lors de la mise à jour du profil.", "error");
+    } finally {
       setIsLoading(false);
-      showToast("Formulaire soumis avec succès !");
-    }, 2000);
+    }
   };
 
   const SelectedIcon = specialityIcons[formData.speciality] || Book;
 
   return (
     <div className="min-h-screen relative bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-800 p-4 md:p-8 font-sans">
-      <style jsx='true'>{`
+      <style jsx="true">{`
         @keyframes fadeInUp {
           from {
             opacity: 0;

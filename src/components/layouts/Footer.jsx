@@ -9,6 +9,7 @@ import {
   Shield,
 } from "lucide-react";
 import logo from "../../assets/oppai_logo.svg";
+import { Link } from "react-router-dom";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -57,10 +58,10 @@ function Footer() {
   ];
 
   const socialLinks = [
-    { icon: <Github size={20} />, href: "#github", label: "GitHub" },
-    { icon: <Twitter size={20} />, href: "#twitter", label: "Twitter" },
-    { icon: <Linkedin size={20} />, href: "#linkedin", label: "LinkedIn" },
-    { icon: <Mail size={20} />, href: "#email", label: "Email" },
+    { icon: <Github size={20} />, href: "https://www.github.com/", label: "GitHub" },
+    { icon: <Twitter size={20} />, href: "https://www.twitter.com/", label: "Twitter" },
+    { icon: <Linkedin size={20} />, href: "https://www.linkdin.com/", label: "LinkedIn" },
+    { icon: <Mail size={20} />, href: "oppaicdev@gmail.com", label: "Email" },
   ];
 
   return (
@@ -153,7 +154,7 @@ function Footer() {
                 <span className="text-coral animate-pulse">❤️</span> by
               </p>
               <a
-                href="https://peppy-crisp-b46439.netlify.app/"
+                href="https://emmanuelagbotoedo.netlify.app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-turquoise hover:text-turquoise-light transition-colors duration-300 font-mono font-semibold group"

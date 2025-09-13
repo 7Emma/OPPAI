@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { createNews } from "../../services/api"; // <-- notre fonction pour créer une news
 import {
   PlusCircle,
   FileText,
@@ -24,7 +25,8 @@ function AddNewsForm() {
     author: "",
     date: "",
     category: "",
-    image: "",
+    imageFile: null, // <-- fichier local
+    imageUrl: "", // <-- URL externe
     readTime: "",
     featured: false,
   });
@@ -32,6 +34,21 @@ function AddNewsForm() {
   const [toast, setToast] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [previewImage, setPreviewImage] = useState(null);
+
+  // Utilisez useEffect pour créer et nettoyer l'URL blob
+  useEffect(() => {
+    if (!formData.imageFile) {
+      setPreviewImage(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(formData.imageFile);
+    setPreviewImage(objectUrl);
+
+    // Nettoyage de l'URL blob lorsque le composant est démonté
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [formData.imageFile]);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -86,20 +103,17 @@ function AddNewsForm() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
 
-      // Vérifier la taille du fichier (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         showToast("L'image ne doit pas dépasser 5MB", "error");
         return;
       }
 
-      // Vérifier le type de fichier
       if (!file.type.startsWith("image/")) {
         showToast("Veuillez sélectionner un fichier image valide", "error");
         return;
       }
 
-      const localUrl = URL.createObjectURL(file);
-      setFormData((prev) => ({ ...prev, image: localUrl }));
+      setFormData((prev) => ({ ...prev, imageFile: file, imageUrl: "" }));
       showToast("Image uploadée avec succès !", "success");
     }
   };
@@ -115,12 +129,30 @@ function AddNewsForm() {
     setIsLoading(true);
 
     try {
-      // Simuler un appel API
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      let payload;
 
-      console.log("Nouvel article :", formData);
+      // La soumission doit TOUJOURS utiliser FormData
+      // car le backend utilise multer, qui attend ce format.
+      // Même s'il n'y a pas de fichier, c'est plus sûr.
+      payload = new FormData();
+      Object.keys(formData).forEach((key) => {
+        if (key === "imageFile" && formData[key]) {
+          payload.append("image", formData[key]); // 'image' doit correspondre au nom du champ dans Multer
+        } else if (key !== "imageUrl" && formData[key] !== null) {
+          payload.append(key, formData[key]);
+        }
+      });
 
-      // Réinitialiser le formulaire
+      // Si l'utilisateur a mis une URL, l'ajouter
+      if (formData.imageUrl) {
+        payload.append("image", formData.imageUrl);
+      }
+
+      // `createNews` doit être mise à jour pour toujours accepter un FormData
+      const res = await createNews(payload);
+
+      showToast("Article publié avec succès ! 🎉", "success");
+
       setFormData({
         title: "",
         excerpt: "",
@@ -128,13 +160,13 @@ function AddNewsForm() {
         author: "",
         date: "",
         category: "",
-        image: "",
+        imageFile: null,
+        imageUrl: "",
         readTime: "",
         featured: false,
       });
-
-      showToast("Article publié avec succès ! 🎉", "success");
     } catch (error) {
+      console.error(error);
       showToast("Erreur lors de la publication. Veuillez réessayer.", "error");
     } finally {
       setIsLoading(false);
@@ -386,11 +418,13 @@ function AddNewsForm() {
                 <input
                   type="text"
                   placeholder="Ou collez un lien image..."
-                  value={
-                    formData.image?.startsWith("http") ? formData.image : ""
-                  }
+                  value={formData.imageUrl}
                   onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, image: e.target.value }))
+                    setFormData((prev) => ({
+                      ...prev,
+                      imageUrl: e.target.value,
+                      imageFile: null, // on vide le fichier si une URL est saisie
+                    }))
                   }
                   className="w-full p-4 rounded-2xl bg-slate-800/60 border border-turquoise/20 text-white placeholder-turquoise/50 focus:border-coral/50 focus:outline-none focus:ring-2 focus:ring-coral/20 transition-all duration-300 mt-2"
                 />
@@ -448,10 +482,11 @@ function AddNewsForm() {
 
                 {/* Preview Card */}
                 <div className="bg-slate-900/60 rounded-xl p-4 border border-turquoise/10">
-                  {formData.image && (
+                  {/* Utilisez l'état 'previewImage' ou 'formData.imageUrl' */}
+                  {(previewImage || formData.imageUrl) && (
                     <div className="w-full h-32 bg-slate-700 rounded-lg mb-3 overflow-hidden">
                       <img
-                        src={formData.image}
+                        src={previewImage || formData.imageUrl} // <-- Changement ici
                         alt="Preview"
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -460,7 +495,6 @@ function AddNewsForm() {
                       />
                     </div>
                   )}
-
                   <div className="space-y-2">
                     <h4 className="font-bold text-cyan-400 text-sm line-clamp-2">
                       {formData.title || "Titre de votre article..."}

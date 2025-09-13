@@ -1,17 +1,29 @@
-import { CheckCircle, PlusCircle, Pencil, Info, LogOut } from "lucide-react";
+import {
+  CheckCircle,
+  PlusCircle,
+  Pencil,
+  Info,
+  LogOut,
+  User,
+} from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import LoadingButton from "../components/common/LoadingButton";
 
 function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleLogout = async () => {
+  // Protection de la route : redirige si non authentifié
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const handleLogout = () => {
     setIsLoggingOut(true);
     try {
-      await logout(); // si logout est async
+      logout(); // logout n'est pas async
     } catch (err) {
       console.error(err);
     } finally {
@@ -21,6 +33,7 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-900 font-sans text-gray-100">
+      {/* Navbar */}
       <nav className="bg-slate-800/80 backdrop-blur-sm shadow-md border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
           <h1 className="text-2xl font-bold text-white tracking-wide">
@@ -43,6 +56,7 @@ function Dashboard() {
         </div>
       </nav>
 
+      {/* Main */}
       <main className="max-w-7xl mx-auto py-10 px-4">
         {/* Welcome Section */}
         <div className="bg-slate-800/50 rounded-2xl shadow-xl p-8 mb-8 border border-slate-700">
@@ -64,15 +78,9 @@ function Dashboard() {
             className="bg-gradient-to-r from-turquoise to-coral p-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 transform flex flex-col items-center justify-center text-white text-center font-semibold"
           >
             <Info size={36} className="mb-3" />
-            <span className="text-lg">Ajouter votre profil</span>
+            <span className="text-lg">Ajouter/Modifer votre profil</span>
           </Link>
-          <Link
-            to="/edit-info"
-            className="bg-slate-700 p-6 rounded-2xl shadow-lg border border-slate-600 hover:bg-slate-600 hover:scale-[1.02] transition-all duration-300 transform flex flex-col items-center justify-center text-white text-center font-semibold"
-          >
-            <Pencil size={36} className="mb-3 text-yellow-400" />
-            <span className="text-lg">Modifier votre profil</span>
-          </Link>
+
           <Link
             to="/add-new"
             className="bg-slate-700 p-6 rounded-2xl shadow-lg border border-slate-600 hover:bg-slate-600 hover:scale-[1.02] transition-all duration-300 transform flex flex-col items-center justify-center text-white text-center font-semibold"
@@ -80,6 +88,15 @@ function Dashboard() {
             <PlusCircle size={36} className="mb-3 text-green-400" />
             <span className="text-lg">Ajouter une actualité</span>
           </Link>
+          {user?.role === "admin" && (
+            <Link
+              to="/admin"
+              className="bg-slate-700 p-6 rounded-2xl shadow-lg border border-slate-600 hover:bg-slate-600 hover:scale-[1.02] transition-all duration-300 transform flex flex-col items-center justify-center text-white text-center font-semibold"
+            >
+              <User size={36} className="mb-3 text-rose-500" />
+              <span className="text-lg">Administrateur</span>
+            </Link>
+          )}
         </div>
       </main>
     </div>

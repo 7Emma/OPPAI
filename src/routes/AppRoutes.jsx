@@ -8,7 +8,8 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import NotFound from "../pages/Errors/NotFound";
 import AddInfo from "../components/addElement/AddInfo";
 import AddNew from "../components/addElement/AddNew";
-import Modifie from "../components/addElement/Modifie";
+import AdminDashboard from "../pages/Admin";
+import AddUser from "../components/admin/AddUser";
 
 const AppRoutes = () => (
   <Routes>
@@ -54,15 +55,10 @@ const AppRoutes = () => (
         </ProtectedRoute>
       }
     />
-    <Route
-      path="/Edit-info"
-      element={
-        <ProtectedRoute>
-          <Modifie />
-        </ProtectedRoute>
-      }
-    />
+
     <Route path="*" element={<NotFound />} />
+    <Route path="/admin/add-user" element={<AddUser />} />
+    <Route path="/admin" element={<AdminDashboard />} />
   </Routes>
 );
 

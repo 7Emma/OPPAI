@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Calendar,
   Clock,
@@ -8,13 +8,34 @@ import {
   Search,
   Filter,
 } from "lucide-react";
-import newsData from "../../Datas/new";
+import { getNews } from "../../services/api"; // ton axios instance
 
 const categories = ["Tous", "Technologie", "Business", "Mise à jour", "Équipe"];
 
 function New() {
+  const [newsData, setNewsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        // L'API est appelée sans le paramètre 'isAdmin', donc elle ne renverra
+        // que les actualités dont le statut est "published"
+        const res = await getNews();
+        setNewsData(res.data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des news :", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  if (loading) return <p>Chargement...</p>;
 
   // Filtrage des actualités
   const filteredNews = newsData.filter((news) => {
