@@ -151,7 +151,7 @@ function AddNewsForm() {
       // `createNews` doit être mise à jour pour toujours accepter un FormData
       const res = await createNews(payload);
 
-      showToast("Article publié avec succès ! 🎉", "success");
+      showToast("Article publié avec succès !", "success");
 
       setFormData({
         title: "",
@@ -527,7 +527,7 @@ function AddNewsForm() {
 
               {/* Tips */}
               <div className="bg-gradient-to-br from-red-400/5 to-cyan-400/5 rounded-2xl p-6 border border-turquoise/20 mt-6">
-                <h4 className="font-bold text-cyan-400 mb-3">💡 Conseils</h4>
+                <h4 className="font-bold text-cyan-400 mb-3">Conseils</h4>
                 <ul className="text-sm text-cyan-400/80 space-y-2">
                   <li>• Utilisez un titre accrocheur et descriptif</li>
                   <li>• Ajoutez une image de qualité (max 5MB)</li>
