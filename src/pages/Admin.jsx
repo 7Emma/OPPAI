@@ -397,14 +397,9 @@ const AdminDashboard = () => {
                 <div
                   className={`absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border z-50 transition-all duration-300 ${
                     showNotifications
-                      ? "opacity-100 translate-y-0"
+                      ? "opacity-100 translate-y-0 pointer-events-auto"
                       : "opacity-0 translate-y-2 pointer-events-none"
                   }`}
-                  onAnimationEnd={() => {
-                    if (!showNotifications) {
-                      setRenderNotificationMenu(false);
-                    }
-                  }}
                 >
                   <div className="p-3 border-b">
                     <h3 className="font-semibold">Notifications</h3>
@@ -437,7 +432,9 @@ const AdminDashboard = () => {
         {/* Page Content */}
         <main className="flex-1 p-6 overflow-y-auto">
           {/* Rendu dynamique de la page */}
-          {CurrentPage && <CurrentPage {...pageProps[currentPage]} />}
+          {CurrentPage && (
+            <CurrentPage key={currentPage} {...pageProps[currentPage]} />
+          )}
         </main>
       </div>
 
