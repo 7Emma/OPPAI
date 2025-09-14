@@ -17,23 +17,24 @@ api.interceptors.request.use((req) => {
 });
 
 // --- Auth ---
-export const loginUser = async (username, password) => {
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+export const requestLoginCode = async (emailOrUsername) => {
+  const res = await api.post("/auth/login", { username: emailOrUsername });
+  return res.data; // { message: "Code envoyé..." }
+};
+
+export const verifyLoginCode = async (emailOrUsername, code) => {
+  const res = await api.post("/auth/login", {
+    username: emailOrUsername,
+    code,
   });
+  const data = res.data;
 
-  const data = await res.json();
-
-  if (!res.ok) throw new Error(data.message || "Erreur lors du login");
-
-  // On stocke bien le token
+  // Stocker le token si succès
   if (data.token) {
     localStorage.setItem("token", data.token);
   }
 
-  return data;
+  return data; // { token, user }
 };
 
 // --- Users ---
@@ -53,18 +54,20 @@ export const createProfile = (data) => {
 };
 
 // --- News (Membres) ---
-export const createNews = (payload) => api.post('/news', payload);
+export const createNews = (payload) => api.post("/news", payload);
 export const getNews = () => api.get("/news?status=approved");
-
 
 // --- Publications ---
 // Récupère toutes les publications (avec un filtre de statut optionnel)
 export const getPublications = (status = "") => {
-  const endpoint = status ? `/admin/publications?status=${status}` : "/admin/publications";
+  const endpoint = status
+    ? `/admin/publications?status=${status}`
+    : "/admin/publications";
   return api.get(endpoint);
 };
 // Récupère les publications en attente de validation.
-export const getPendingPublications = () => api.get("/admin/publications?status=pending");
+export const getPendingPublications = () =>
+  api.get("/admin/publications?status=pending");
 // Crée une nouvelle publication (avec un statut "pending" par défaut)
 export const createPublication = (publicationData) => {
   const dataWithStatus = { ...publicationData, status: "pending" };

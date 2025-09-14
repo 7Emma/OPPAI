@@ -15,10 +15,10 @@ import {
   addUser,
   deleteUser,
   toggleUserStatus,
-  getPublications, // Nouveau
+  getPublications,
   getPendingPublications,
-  approvePublication, // Nouveau
-  rejectPublication, // Nouveau
+  approvePublication,
+  rejectPublication,
 } from "../services/api";
 // Importation des pages et composants
 import DashboardPage from "../components/admin/DashboardPage";
@@ -26,6 +26,7 @@ import UsersPage from "../components/admin/UsersPage";
 import PublicationsPage from "../components/admin/PublicationsPage";
 import SettingsPage from "../components/admin/SettingsPage";
 import Toast from "../components/common/Toast";
+
 // ---------- AdminDashboard ----------
 const AdminDashboard = () => {
   const { logout } = useAuth();
@@ -34,21 +35,26 @@ const AdminDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState("");
   const [currentPage, setCurrentPage] = useState("dashboard");
+
   // Utilisateurs
   const [users, setUsers] = useState([]);
   const [newUserEmail, setNewUserEmail] = useState("");
   const [userFilters, setUserFilters] = useState({ status: "all", search: "" });
+
   // Publications
   const [publications, setPublications] = useState([]);
   const [publicationFilters, setPublicationFilters] = useState({
-    status: "pending", // Par défaut, on affiche les publications en attente
+    status: "approved",
     search: "",
   });
   const [pendingPublicationsCount, setPendingPublicationsCount] = useState(0);
+
   // Notifications
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [renderNotificationMenu, setRenderNotificationMenu] = useState(false);
   const notificationRef = useRef(null);
+
   // ---------- useEffect ----------
   useEffect(() => {
     fetchUsers();
@@ -57,6 +63,18 @@ const AdminDashboard = () => {
     const interval = setInterval(fetchPendingPublicationsCount, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (showNotifications) {
+      setRenderNotificationMenu(true);
+    } else {
+      const timer = setTimeout(() => {
+        setRenderNotificationMenu(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [showNotifications]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -66,10 +84,20 @@ const AdminDashboard = () => {
         setShowNotifications(false);
       }
     };
-    if (showNotifications)
-      document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    if (showNotifications) {
+      // Petit délai pour éviter les conflits de rendu
+      const timer = setTimeout(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+      }, 0);
+
+      return () => {
+        clearTimeout(timer);
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
   }, [showNotifications]);
+
   // ---------- Fonctions API ----------
   const fetchUsers = async () => {
     try {
@@ -80,6 +108,7 @@ const AdminDashboard = () => {
       showToast("Erreur lors du chargement des utilisateurs", "error");
     }
   };
+
   const fetchPublications = async () => {
     try {
       const res = await getPublications();
@@ -89,6 +118,7 @@ const AdminDashboard = () => {
       showToast("Erreur de chargement des publications", "error");
     }
   };
+
   const fetchPendingPublicationsCount = async () => {
     try {
       const res = await getPendingPublications();
@@ -100,6 +130,7 @@ const AdminDashboard = () => {
       );
     }
   };
+
   const handleAddUser = async () => {
     if (!newUserEmail) {
       showToast("Veuillez saisir un email", "error");
@@ -115,6 +146,7 @@ const AdminDashboard = () => {
       showToast(err.message || "Erreur lors de l'ajout", "error");
     }
   };
+
   const handleDeleteUser = async (id) => {
     try {
       await deleteUser(id);
@@ -125,6 +157,7 @@ const AdminDashboard = () => {
       showToast("Erreur lors de la suppression", "error");
     }
   };
+
   const handleToggleUserStatus = async (id) => {
     try {
       const updatedUser = await toggleUserStatus(id);
@@ -135,6 +168,7 @@ const AdminDashboard = () => {
       showToast("Erreur lors de la modification du statut", "error");
     }
   };
+
   const handlePublicationAction = async (id, action) => {
     try {
       if (action === "approved") {
@@ -154,9 +188,11 @@ const AdminDashboard = () => {
       showToast("Erreur lors de la mise à jour", "error");
     }
   };
+
   // ---------- Fonctions utilitaires ----------
   const showToast = (message, type = "info") => setToast({ message, type });
   const closeToast = () => setToast(null);
+
   const filteredUsers = users.filter((user) => {
     const matchesStatus =
       userFilters.status === "all" || user.status === userFilters.status;
@@ -165,6 +201,7 @@ const AdminDashboard = () => {
       user.email?.toLowerCase().includes(userFilters.search.toLowerCase());
     return matchesStatus && matchesSearch;
   });
+
   const filteredPublications = publications.filter((pub) => {
     const matchesStatus =
       publicationFilters.status === "all" ||
@@ -178,12 +215,14 @@ const AdminDashboard = () => {
         .includes(publicationFilters.search.toLowerCase());
     return matchesStatus && matchesSearch;
   });
+
   const stats = {
     totalUsers: users.length,
     activeUsers: users.filter((u) => u.status === "active").length,
     totalPublications: publications.length,
     pendingPublications: pendingPublicationsCount,
   };
+
   const menuItems = [
     {
       id: "dashboard",
@@ -205,9 +244,11 @@ const AdminDashboard = () => {
       component: SettingsPage,
     },
   ];
+
   const CurrentPage = menuItems.find(
     (item) => item.id === currentPage
   )?.component;
+
   const getStatusColor = (status) => {
     switch (status) {
       case "approved":
@@ -222,6 +263,7 @@ const AdminDashboard = () => {
         return "bg-gray-100 text-gray-800";
     }
   };
+
   const getStatusLabel = (status) => {
     switch (status) {
       case "approved":
@@ -238,6 +280,7 @@ const AdminDashboard = () => {
         return status;
     }
   };
+
   const pageProps = {
     dashboard: { stats },
     users: {
@@ -271,6 +314,7 @@ const AdminDashboard = () => {
     },
     settings: {},
   };
+
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
@@ -294,6 +338,7 @@ const AdminDashboard = () => {
             )}
           </button>
         </div>
+
         <nav className="mt-8">
           {menuItems.map((item) => (
             <button
@@ -312,6 +357,7 @@ const AdminDashboard = () => {
             </button>
           ))}
         </nav>
+
         <div className="absolute bottom-4 left-4">
           <button
             onClick={logout}
@@ -324,6 +370,7 @@ const AdminDashboard = () => {
           </button>
         </div>
       </div>
+
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Topbar */}
@@ -332,11 +379,11 @@ const AdminDashboard = () => {
             {menuItems.find((item) => item.id === currentPage)?.label}
           </h2>
           <div className="flex items-center space-x-4">
-            {/* Notifications */}
+            {/* Notifications - CORRIGÉ */}
             <div className="relative" ref={notificationRef}>
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full"
+                className="relative p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <Bell size={20} />
                 {pendingPublicationsCount > 0 && (
@@ -345,28 +392,55 @@ const AdminDashboard = () => {
                   </span>
                 )}
               </button>
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border z-50">
+
+              {renderNotificationMenu && (
+                <div
+                  className={`absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border z-50 transition-all duration-300 ${
+                    showNotifications
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-2 pointer-events-none"
+                  }`}
+                  onAnimationEnd={() => {
+                    if (!showNotifications) {
+                      setRenderNotificationMenu(false);
+                    }
+                  }}
+                >
                   <div className="p-3 border-b">
                     <h3 className="font-semibold">Notifications</h3>
                   </div>
                   <div className="max-h-64 overflow-y-auto">
-                    {/* Le code de gestion des notifications est ici, mais je vais l'ignorer pour la simplicité, car vous n'avez pas fourni la logique complète pour cela. */}
-                    <div className="p-3 text-sm text-gray-500">
-                      Aucune nouvelle notification
-                    </div>
+                    {notifications.length === 0 ? (
+                      <div className="p-3 text-sm text-gray-500">
+                        Aucune nouvelle notification
+                      </div>
+                    ) : (
+                      notifications.map((n) => (
+                        <div
+                          key={n.id}
+                          className={`p-3 border-b ${
+                            n.unread ? "bg-blue-50" : ""
+                          }`}
+                        >
+                          <p className="text-sm font-medium">{n.message}</p>
+                          <p className="text-xs text-gray-500">{n.time}</p>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
             </div>
           </div>
         </header>
+
         {/* Page Content */}
         <main className="flex-1 p-6 overflow-y-auto">
           {/* Rendu dynamique de la page */}
           {CurrentPage && <CurrentPage {...pageProps[currentPage]} />}
         </main>
       </div>
+
       {/* Toast */}
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={closeToast} />
@@ -374,4 +448,5 @@ const AdminDashboard = () => {
     </div>
   );
 };
+
 export default AdminDashboard;
