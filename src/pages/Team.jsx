@@ -191,7 +191,7 @@ const TeamSection = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {roles.map((role, index) => (
             <div
-              key={index}
+              key={`role-${role.toLowerCase().replace(/\s+/g, '-')}`}
               className="animate-slide-in"
               style={{ animationDelay: `${0.1 * index}s` }}
             >

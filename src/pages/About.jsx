@@ -376,7 +376,7 @@ function AboutSection() {
                 const Icon = stat.icon;
                 return (
                   <motion.div
-                    key={index}
+                    key={`stat-${stat.label.toLowerCase().replace(/\s+/g, '-')}-${index}`}
                     className={`group relative bg-slate-800/40 backdrop-blur-sm rounded-2xl p-6 border border-turquoise/20 hover:border-coral/50 transition-all duration-500 cursor-pointer ${
                       hoveredStat === index ? "scale-105 shadow-2xl" : ""
                     }`}
@@ -464,7 +464,7 @@ function AboutSection() {
                   },
                 ].map((mission, index) => (
                   <motion.div
-                    key={index}
+                    key={`mission-${mission.highlight.toLowerCase()}-${index}`}
                     className="flex items-start space-x-4"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -511,7 +511,7 @@ function AboutSection() {
           <div className="grid grid-cols-3 gap-10 mb-6">
             {[team1, team2, team3].map((teamImg, index) => (
               <motion.div
-                key={index}
+                key={`team-member-${teamImg.split('/').pop().split('.')[0]}-${index}`}
                 className="aspect-square rounded-2xl bg-gradient-to-br from-coral/20 to-turquoise/20 border border-turquoise/30 flex items-center justify-center group"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}

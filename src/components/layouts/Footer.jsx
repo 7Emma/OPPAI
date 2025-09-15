@@ -107,7 +107,7 @@ function Footer() {
         {/* Links Grid - Responsive Mobile Vertical */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {footerSections.map((section, index) => (
-            <div key={index} className="group text-center sm:text-left">
+            <div key={`footer-section-${section.title.toLowerCase().replace(/\s+/g, '-')}-${index}`} className="group text-center sm:text-left">
               <div className="flex items-center justify-center sm:justify-start mb-4">
                 {section.icon}
                 <h4 className="font-semibold text-white ml-2 font-mono text-lg group-hover:text-turquoise transition-colors duration-300">

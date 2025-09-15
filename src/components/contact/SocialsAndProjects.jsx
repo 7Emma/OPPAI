@@ -84,7 +84,7 @@ function SocialsAndProjects() {
         <div className="space-y-4 mb-8">
           {socialLinks.map((social, index) => (
             <a
-              key={index}
+              key={`social-${social.href || social.name}-${index}`}
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
@@ -136,7 +136,7 @@ function SocialsAndProjects() {
             Projets Disponibles:
           </h4>
           {projectTypes.map((project, index) => (
-            <div key={index} className="flex items-center justify-between">
+            <div key={`project-${project.name}-${index}`} className="flex items-center justify-between">
               <div className="flex items-center">
                 {project.icon}
                 <span className="text-gray-300 text-sm ml-2">
