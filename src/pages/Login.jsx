@@ -214,25 +214,18 @@ const LoginPage = () => {
     setStep("code");
   };
 
-  const handleLogin = (loggedUser) => {
-    console.log("Connexion réussie:", loggedUser);
-    // Stocker le token et rediriger
-    if (loggedUser.token) {
-      localStorage.setItem("token", loggedUser.token);
-      window.location.href = "/admin";
-    }
+  const handleLogin = (user) => {
+    console.log("Connexion réussie :", user);
+    window.location.href = "/admin"; // redirection après login
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 p-4">
-      {/* Contenu principal */}
-      <div className="w-full max-w-md">
-        {step === "email" ? (
-          <EnterEmail onCodeSent={handleCodeSent} />
-        ) : (
-          <EnterCode email={email} onLogin={handleLogin} />
-        )}
-      </div>
+    <div>
+      {step === "email" ? (
+        <EnterEmail onCodeSent={handleCodeSent} />
+      ) : (
+        <EnterCode email={email} onLogin={handleLogin} />
+      )}
     </div>
   );
 };

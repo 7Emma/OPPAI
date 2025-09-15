@@ -17,22 +17,16 @@ api.interceptors.request.use((req) => {
 });
 
 // --- Auth ---
-export const requestLoginCode = async (emailOrUsername) => {
-  const res = await api.post("/auth/login", { username: emailOrUsername });
+export const requestLoginCode = async (email) => {
+  const res = await api.post("/auth/login", { email });
   return res.data; // { message: "Code envoyé..." }
 };
 
-export const verifyLoginCode = async (emailOrUsername, code) => {
-  const res = await api.post("/auth/login", {
-    username: emailOrUsername,
-    code,
-  });
+export const verifyLoginCode = async (email, code) => {
+  const res = await api.post("/auth/login", { email, code });
   const data = res.data;
 
-  // Stocker le token si succès
-  if (data.token) {
-    localStorage.setItem("token", data.token);
-  }
+  if (data.token) localStorage.setItem("token", data.token);
 
   return data; // { token, user }
 };
