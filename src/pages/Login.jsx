@@ -349,8 +349,14 @@ const LoginPage = () => {
 
   const handleLogin = (user) => {
     console.log("Connexion réussie :", user);
-    alert(`Bienvenue dans OPPAI, ${user.name}! 🎉`);
-    // window.location.href = "/admin";
+    alert(`Bienvenue dans OPPAI, ${user.name}!`);
+    
+    // Redirection selon le rôle de l'utilisateur
+    if (user.role === 'admin') {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/Dashboard";
+    }
   };
 
   const handleBack = () => {
