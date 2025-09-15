@@ -178,17 +178,17 @@ function ProjectCard({ project, index }) {
             <div className="flex flex-wrap gap-2">
               {project.technologies.slice(0, 3).map((tech, techIndex) => (
                 <span
-                  key={techIndex}
+                  key={`${project._id || project.title}-tech-${tech}`}
                   className="bg-slate-700/50 text-turquoise-light px-2 py-1 rounded text-xs font-mono border border-slate-600 group-hover:border-turquoise/30 transition-colors duration-300"
                 >
                   {tech}
                 </span>
               ))}
-              {project.technologies.length > 3 && (
+              {project.technologies.length > 3 ? (
                 <span className="bg-slate-600/50 text-gray-400 px-2 py-1 rounded text-xs font-mono">
                   +{project.technologies.length - 3}
                 </span>
-              )}
+              ) : null}
             </div>
           </div>
 

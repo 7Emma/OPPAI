@@ -45,7 +45,7 @@ function ServicesSection() {
           {/* Service categories */}
           <div className="flex justify-center items-center space-x-8 mb-8">
             {serviceCategories.map((category, index) => (
-              <div key={index} className="text-center">
+              <div key={`category-${category.name.toLowerCase()}-${index}`} className="text-center">
                 <div
                   className={`text-2xl font-bold ${category.color} font-mono`}
                 >
@@ -107,7 +107,7 @@ function ServicesSection() {
                 desc: "Mise en production et suivi",
               },
             ].map((phase, index) => (
-              <div key={index} className="text-center group">
+              <div key={`phase-${phase.step}-${phase.title.toLowerCase()}-${index}`} className="text-center group">
                 <div className="w-16 h-16 bg-gradient-to-r from-coral/20 to-turquoise/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-turquoise/30 group-hover:border-coral/50 transition-all duration-300">
                   <span className="text-turquoise font-bold font-mono text-lg">
                     {phase.step}

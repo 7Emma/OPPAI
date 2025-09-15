@@ -284,7 +284,7 @@ function Personal() {
                     <div className="flex flex-wrap -m-1">
                       {member.technologies.map((tech, index) => (
                         <TechBadge
-                          key={index}
+                          key={`${member._id}-tech-${tech.replace(/\s+/g, '-').toLowerCase()}-${index}`}
                           tech={tech}
                           gradient={member.gradient}
                         />

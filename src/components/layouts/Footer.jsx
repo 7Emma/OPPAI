@@ -91,7 +91,7 @@ function Footer() {
           <div className="flex justify-center space-x-4 sm:space-x-6">
             {socialLinks.map((social, index) => (
               <a
-                key={index}
+                key={`social-${social.label.toLowerCase()}-${index}`}
                 href={social.href}
                 className="group p-3 rounded-full bg-slate-800/50 border border-slate-700 hover:border-turquoise hover:bg-turquoise/10 transition-all duration-300 transform hover:scale-110"
                 aria-label={social.label}
@@ -118,7 +118,7 @@ function Footer() {
               <div className="space-y-3">
                 {section.links.map((link, linkIndex) => (
                   <a
-                    key={linkIndex}
+                    key={`${section.title.toLowerCase()}-link-${link.name.replace(/\s+/g, '-').toLowerCase()}-${linkIndex}`}
                     href={link.href}
                     className="block text-gray-400 hover:text-turquoise-light transition-all duration-300 font-mono text-sm hover:translate-x-1 hover:scale-105 transform"
                   >

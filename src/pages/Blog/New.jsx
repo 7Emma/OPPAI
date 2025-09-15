@@ -159,7 +159,7 @@ function New() {
         )}
 
         {/* Regular Articles Grid */}
-        {regularNews.length > 0 && (
+        {regularNews.length > 0 ? (
           <div>
             <h2 className="text-2xl font-bold text-white mb-8">
               Autres Actualités
@@ -211,10 +211,10 @@ function New() {
               ))}
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* No Results Message */}
-        {filteredNews.length === 0 && (
+        {filteredNews.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-24 h-24 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <Search className="w-12 h-12 text-gray-400" />
@@ -227,7 +227,7 @@ function New() {
               autre catégorie.
             </p>
           </div>
-        )}
+        ) : null}
 
         {/* Newsletter Subscription */}
         <div className="mt-20 bg-gradient-to-r from-turquoise/80 via-cyan-500/80 to-slate-700/80 rounded-2xl p-8 text-center text-white shadow-2xl border border-white/20">

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 
 const Portal = ({ children, wrapperId = "react-portal-wrapper" }) => {
   const [wrapperElement, setWrapperElement] = useState(null);
+  const elementCreatedRef = useRef(false);
 
   useEffect(() => {
     // Cherche le wrapper existant
@@ -12,12 +13,22 @@ const Portal = ({ children, wrapperId = "react-portal-wrapper" }) => {
     if (!element) {
       element = document.createElement("div");
       element.id = wrapperId;
+      element.setAttribute("data-portal-root", "true");
       document.body.appendChild(element);
+      elementCreatedRef.current = true;
     }
 
     setWrapperElement(element);
 
-    // On ne supprime jamais le wrapper pour éviter insertBefore error
+    // Nettoyage : supprime l'élément seulement si on l'a créé
+    return () => {
+      if (elementCreatedRef.current && element && element.parentNode) {
+        // Vérifie que l'élément n'a plus d'enfants avant de le supprimer
+        if (element.childNodes.length === 0) {
+          element.parentNode.removeChild(element);
+        }
+      }
+    };
   }, [wrapperId]);
 
   if (!wrapperElement) return null;

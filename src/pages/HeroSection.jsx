@@ -146,7 +146,7 @@ function HeroSection({ scrollToSection }) {
       <div className="absolute inset-0 justify-center">
         {[...Array(floatingCount)].map((_, i) => (
           <motion.div
-            key={i}
+            key={`floating-symbol-${i}`}
             className="absolute text-turquoise-light/40 font-mono text-xs"
             initial={{
               x: Math.random() * window.innerWidth,
@@ -330,7 +330,7 @@ function HeroSection({ scrollToSection }) {
             { value: "∞", label: "Tasses de café" },
           ].map((stat, index) => (
             <motion.div
-              key={index}
+              key={`stat-${stat.value.replace(/\+/g, 'plus').replace(/∞/g, 'infinity')}-${index}`}
               className="text-center"
               variants={statsVariants}
               initial={{ y: 20, opacity: 0 }}
@@ -446,7 +446,7 @@ function HeroSection({ scrollToSection }) {
         >
           {backgroundImages.map((_, index) => (
             <motion.button
-              key={index}
+              key={`bg-indicator-${index}`}
               onClick={() => setCurrentBgIndex(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === currentBgIndex ? "bg-turquoise" : "bg-white/30"

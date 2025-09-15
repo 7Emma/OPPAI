@@ -44,7 +44,7 @@ const RoleCard = ({ role, data, onHover }) => (
       <div className="flex flex-wrap gap-1">
         {data.technologies.map((tech, index) => (
           <span
-            key={index}
+            key={`${role}-tech-${tech}-${index}`}
             className="bg-slate-700/50 text-teal-400 px-2 py-1 rounded text-xs font-mono border border-slate-600 group-hover:border-cyan-500/30 transition-colors duration-300"
           >
             {tech}

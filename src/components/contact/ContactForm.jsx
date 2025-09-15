@@ -120,7 +120,7 @@ function ContactForm() {
         </LoadingButton>
       </form>
 
-      {toast && <Toast message={toast} />}
+      {toast ? <Toast message={toast} /> : null}
     </div>
   );
 }

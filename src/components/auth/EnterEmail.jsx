@@ -32,7 +32,7 @@ const EnterEmail = ({ onCodeSent }) => {
         required
         className="border px-3 py-2 rounded w-full"
       />
-      {error && <p className="text-red-500">{error}</p>}
+      {error ? <p className="text-red-500">{error}</p> : null}
       <button
         type="submit"
         disabled={loading}

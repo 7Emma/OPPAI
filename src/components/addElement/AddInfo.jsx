@@ -463,7 +463,7 @@ function AddInfo() {
               ) : (
                 formData.technologies.map((tech, index) => (
                   <div
-                    key={`${tech}-${index}`}
+                    key={`tech-${tech.replace(/\s+/g, '-').toLowerCase()}-${index}`}
                     className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-2 rounded-lg border-l-4 border-[#40E0D0] tech-tag animate-slide-in"
                   >
                     <span className="font-medium text-gray-800">{tech}</span>

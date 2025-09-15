@@ -142,8 +142,8 @@ const PublicationsPage = ({
                 </div>
               </div>
               <div className="flex justify-end gap-3 mt-4">
-                {pub.status === "pending" && (
-                  <>
+                {pub.status === "pending" ? (
+                  <div className="flex gap-3 flex-1">
                     <button
                       onClick={() =>
                         handlePublicationAction(pub._id, "approved")
@@ -162,8 +162,8 @@ const PublicationsPage = ({
                       <XCircle className="w-5 h-5 mr-2" />
                       Rejeter
                     </button>
-                  </>
-                )}
+                  </div>
+                ) : null}
               </div>
             </div>
           ))}

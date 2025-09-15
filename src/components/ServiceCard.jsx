@@ -49,7 +49,7 @@ function ServiceCard({ service, index, onHover }) {
           <div className="grid grid-cols-2 gap-2">
             {service.features.map((feature, idx) => (
               <div
-                key={idx}
+                key={`${service.id || service.title}-feature-${idx}-${feature}`}
                 className="bg-slate-700/40 text-turquoise-light px-2 py-1 rounded text-xs font-mono border border-slate-600 group-hover:border-turquoise/30 transition-colors duration-300"
               >
                 {feature}
