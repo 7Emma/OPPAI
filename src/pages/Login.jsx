@@ -188,7 +188,7 @@ const EnterCode = ({ email, onLogin, onBack }) => {
     }
     try {
       const data = await verifyLoginCode(email, code);
-      onLogin(data.user);
+      onLogin(data);
     } catch (err) {
       setMessage(err.response?.data?.message || err.message);
     } finally {
@@ -352,8 +352,7 @@ const LoginPage = () => {
   const handleLogin = (data) => {
     console.log("Connexion réussie :", data);
 
-    // Stockage sécurisé du token et de l'utilisateur
-    localStorage.setItem("token", data.token);
+    // Stockage de l'utilisateur
     localStorage.setItem("user", JSON.stringify(data.user));
 
     // Redirection selon le rôle
