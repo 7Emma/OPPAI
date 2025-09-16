@@ -11,13 +11,23 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  // Initialiser depuis localStorage si possible
+  // Initialiser depuis localStorage avec sécurité
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem("user");
+      return savedUser && savedUser !== "undefined"
+        ? JSON.parse(savedUser)
+        : null;
+    } catch (err) {
+      console.error("Erreur lors du parse de user :", err);
+      return null;
+    }
   });
 
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [token, setToken] = useState(() => {
+    const savedToken = localStorage.getItem("token");
+    return savedToken && savedToken !== "undefined" ? savedToken : null;
+  });
 
   const isAuthenticated = !!user && !!token;
 
@@ -36,7 +46,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, isAuthenticated, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
