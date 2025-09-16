@@ -86,7 +86,7 @@ const PhotoCarousel = () => {
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {teamPhotos.map((_, index) => (
             <button
-              key={`indicator-${index}`}
+              key={index}
               onClick={() => goToSlide(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === currentIndex

@@ -10,6 +10,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { requestLoginCode, verifyLoginCode } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const EnterEmail = ({ onCodeSent }) => {
   const [email, setEmail] = useState("");
@@ -341,6 +342,7 @@ const EnterCode = ({ email, onLogin, onBack }) => {
 const LoginPage = () => {
   const [step, setStep] = useState("email");
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
   const handleCodeSent = (emailValue) => {
     setEmail(emailValue);
@@ -349,13 +351,11 @@ const LoginPage = () => {
 
   const handleLogin = (user) => {
     console.log("Connexion réussie :", user);
-    alert(`Bienvenue dans OPPAI, ${user.name}!`);
-    
-    // Redirection selon le rôle de l'utilisateur
-    if (user.role === 'admin') {
-      window.location.href = "/admin";
+
+    if (user.role === "admin") {
+      navigate("/admin");
     } else {
-      window.location.href = "/Dashboard";
+      navigate("/dashboard");
     }
   };
 

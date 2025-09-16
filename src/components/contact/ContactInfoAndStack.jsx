@@ -57,7 +57,7 @@ function ContactInfoAndStack() {
 
       <div className="space-y-6 mb-8">
         {contactInfo.map((info, index) => (
-          <div key={`contact-${info.label}-${index}`} className="flex items-start">
+          <div key={index} className="flex items-start">
             <div className="w-10 h-10 bg-gradient-to-r from-coral/20 to-turquoise/20 rounded-lg flex items-center justify-center mr-4 border border-turquoise/30">
               {info.icon}
             </div>
@@ -117,7 +117,7 @@ function ContactInfoAndStack() {
               <div className="flex flex-wrap gap-1 mt-1">
                 {techs.map((tech, idx) => (
                   <span
-                    key={`tech-${category}-${tech}-${idx}`}
+                    key={idx}
                     className="bg-slate-700/50 text-coral px-2 py-1 rounded border border-slate-600"
                   >
                     {tech}

@@ -110,7 +110,7 @@ function HeroSection({ scrollToSection }) {
             (bg, index) =>
               index === currentBgIndex && (
                 <motion.div
-                  key={`bg-${bg.split('/').pop()?.split('.')[0] || index}`}
+                  key={index}
                   className="absolute inset-0 bg-cover bg-center"
                   style={{ backgroundImage: `url(${bg})` }}
                   initial={{ opacity: 0, scale: 1.1 }}
