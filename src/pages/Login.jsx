@@ -349,10 +349,15 @@ const LoginPage = () => {
     setStep("code");
   };
 
-  const handleLogin = (user) => {
-    console.log("Connexion réussie :", user);
+  const handleLogin = (data) => {
+    console.log("Connexion réussie :", data);
 
-    if (user.role === "admin") {
+    // Stockage sécurisé du token et de l'utilisateur
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    // Redirection selon le rôle
+    if (data.user.role === "admin") {
       navigate("/admin");
     } else {
       navigate("/dashboard");
