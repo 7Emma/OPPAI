@@ -18,12 +18,12 @@ api.interceptors.request.use((req) => {
 
 // --- Auth ---
 export const requestLoginCode = async (email) => {
-  const res = await api.post("/auth/login", { email });
+  const res = await api.post("/auth/send-code", { email });
   return res.data; // { message: "Code envoyé..." }
 };
 
 export const verifyLoginCode = async (email, code) => {
-  const res = await api.post("/auth/login", { email, code });
+  const res = await api.post("/auth/verify-code", { email, code });
   const data = res.data;
 
   if (data.token) localStorage.setItem("token", data.token);
@@ -65,7 +65,7 @@ export const getPendingPublications = () =>
 // Crée une nouvelle publication (avec un statut "pending" par défaut)
 export const createPublication = (publicationData) => {
   const dataWithStatus = { ...publicationData, status: "pending" };
-  return api.post("/publications", dataWithStatus);
+  return api.post("/news", dataWithStatus);
 };
 // Approuve une publication.
 export const approvePublication = (id) =>

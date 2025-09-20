@@ -1,12 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-const Portal = ({ children, wrapperId = "react-portal-wrapper" }) => {
+const Portal = ({ children, wrapperId = "portal-root" }) => {
   const [wrapperElement, setWrapperElement] = useState(null);
-  const elementCreatedRef = useRef(false);
 
   useEffect(() => {
-    // Cherche le wrapper existant
+    // Cherche le wrapper existant (qui doit déjà exister dans index.html)
     let element = document.getElementById(wrapperId);
 
     // Si pas trouvé, le crée et l'ajoute au body
@@ -15,19 +14,13 @@ const Portal = ({ children, wrapperId = "react-portal-wrapper" }) => {
       element.id = wrapperId;
       element.setAttribute("data-portal-root", "true");
       document.body.appendChild(element);
-      elementCreatedRef.current = true;
     }
 
     setWrapperElement(element);
 
-    // Nettoyage : supprime l'élément seulement si on l'a créé
+    // Pas de nettoyage nécessaire car l'élément doit persister
     return () => {
-      if (elementCreatedRef.current && element && element.parentNode) {
-        // Vérifie que l'élément n'a plus d'enfants avant de le supprimer
-        if (element.childNodes.length === 0) {
-          element.parentNode.removeChild(element);
-        }
-      }
+      // Ne pas supprimer l'élément portal-root car il est défini dans index.html
     };
   }, [wrapperId]);
 
