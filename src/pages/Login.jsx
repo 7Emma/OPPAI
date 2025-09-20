@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { requestLoginCode, verifyLoginCode } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const EnterEmail = ({ onCodeSent }) => {
   const [email, setEmail] = useState("");
@@ -343,6 +344,7 @@ const LoginPage = () => {
   const [step, setStep] = useState("email");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleCodeSent = (emailValue) => {
     setEmail(emailValue);
@@ -352,8 +354,8 @@ const LoginPage = () => {
   const handleLogin = (data) => {
     console.log("Connexion réussie :", data);
 
-    // Stockage de l'utilisateur
-    localStorage.setItem("user", JSON.stringify(data.user));
+    // Utiliser le contexte AuthContext pour la connexion
+    login(data.user, data.token);
 
     // Redirection selon le rôle
     if (data.user.role === "admin") {

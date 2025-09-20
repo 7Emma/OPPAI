@@ -166,8 +166,23 @@ function AddNewsForm() {
         featured: false,
       });
     } catch (error) {
-      console.error(error);
-      showToast("Erreur lors de la publication. Veuillez réessayer.", "error");
+      console.error("Erreur lors de la création de l'article:", error);
+
+      // Gestion des erreurs spécifiques
+      if (error.response?.data?.message) {
+        showToast(error.response.data.message, "error");
+      } else if (error.response?.status === 400) {
+        showToast("Données invalides. Vérifiez vos informations.", "error");
+      } else if (error.response?.status === 401) {
+        showToast("Session expirée. Veuillez vous reconnecter.", "error");
+      } else if (error.response?.status === 413) {
+        showToast("L'image est trop volumineuse (max 5MB).", "error");
+      } else {
+        showToast(
+          "Erreur lors de la publication. Veuillez réessayer.",
+          "error"
+        );
+      }
     } finally {
       setIsLoading(false);
     }

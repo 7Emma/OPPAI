@@ -13,18 +13,21 @@ const Portal = ({ children, wrapperId = "portal-root" }) => {
       element = document.createElement("div");
       element.id = wrapperId;
       element.setAttribute("data-portal-root", "true");
+      element.style.position = "relative";
+      element.style.zIndex = "9999";
       document.body.appendChild(element);
     }
 
     setWrapperElement(element);
 
-    // Pas de nettoyage nécessaire car l'élément doit persister
+    // Nettoyage lors du démontage du composant
     return () => {
-      // Ne pas supprimer l'élément portal-root car il est défini dans index.html
+      // Ne pas supprimer l'élément portal-root car il est partagé
     };
   }, [wrapperId]);
 
-  if (!wrapperElement) return null;
+  // Vérifier que nous sommes côté client
+  if (typeof window === "undefined" || !wrapperElement) return null;
 
   return createPortal(children, wrapperElement);
 };

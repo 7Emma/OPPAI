@@ -72,12 +72,18 @@ function AddInfo() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await getProfiles(); // Récupère le profil de l'utilisateur connecté
-        if (response.data) {
-          setFormData(response.data); // Préremplir le formulaire avec les données existantes
+        const response = await getProfiles(); // Récupère tous les profils
+        if (response.data && response.data.length > 0) {
+          // Trouver le profil de l'utilisateur connecté
+          const userProfile = response.data.find(
+            (profile) => profile.user === localStorage.getItem("userId")
+          );
+          if (userProfile) {
+            setFormData(userProfile); // Préremplir le formulaire avec les données existantes
+          }
         }
-      } catch (error) {
-        console.log("Pas de profil existant, formulaire vide.");
+      } catch (err) {
+        console.log("Pas de profil existant, formulaire vide:", err.message);
         // Si pas de profil, le formulaire reste vide (initial state)
       } finally {
         setIsVisible(true);
@@ -92,12 +98,28 @@ function AddInfo() {
 
     if (name === "avatar" && files && files[0]) {
       const file = files[0];
+
+      // Validation de la taille du fichier (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        showToast("L'image ne doit pas dépasser 5MB", "error");
+        return;
+      }
+
+      // Validation du type de fichier
+      if (!file.type.startsWith("image/")) {
+        showToast("Veuillez sélectionner un fichier image valide", "error");
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prev) => ({
           ...prev,
           image: reader.result,
         }));
+      };
+      reader.onerror = () => {
+        showToast("Erreur lors du chargement de l'image", "error");
       };
       reader.readAsDataURL(file);
     } else {
@@ -106,7 +128,7 @@ function AddInfo() {
         [name]:
           name === "projects" || name === "rating"
             ? value === ""
-              ? ""
+              ? 0
               : Number(value)
             : value,
       }));
@@ -143,42 +165,77 @@ function AddInfo() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Vérification de tous les champs de formData
-    const allFields = Object.keys(formData);
-    const isFormValid = allFields.every((field) => {
-      // Les champs 'image', 'technologies' et 'gradient' ont des vérifications spécifiques
-      if (field === "image") return !!formData.image;
-      if (field === "technologies") return formData.technologies.length > 0;
-      if (field === "gradient") return !!formData.gradient;
-      if (
-        field === "portfolioLink" ||
-        field === "github" ||
-        field === "linkedin"
-      )
-        return true; // Les liens ne sont pas obligatoires
-
-      // Pour les autres champs, vérifier s'ils sont remplis
-      return formData[field] && String(formData[field]).trim() !== "";
+    // Validation des champs obligatoires
+    const requiredFields = [
+      "name",
+      "role",
+      "image",
+      "speciality",
+      "description",
+      "email",
+      "projects",
+      "rating",
+      "gradient",
+    ];
+    const missingFields = requiredFields.filter((field) => {
+      if (field === "image") return !formData.image;
+      if (field === "technologies")
+        return !formData.technologies || formData.technologies.length === 0;
+      return !formData[field] || String(formData[field]).trim() === "";
     });
 
-    if (!isFormValid) {
-      showToast("Veuillez remplir tous les champs obligatoires.", "error");
+    if (missingFields.length > 0) {
+      showToast(
+        `Veuillez remplir les champs obligatoires: ${missingFields.join(", ")}`,
+        "error"
+      );
+      return;
+    }
+
+    // Validation des technologies
+    if (!formData.technologies || formData.technologies.length === 0) {
+      showToast("Veuillez ajouter au moins une technologie.", "error");
+      return;
+    }
+
+    // Validation de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      showToast("Veuillez entrer un email valide.", "error");
+      return;
+    }
+
+    // Validation de la note (0-5)
+    if (formData.rating < 0 || formData.rating > 5) {
+      showToast("La note doit être entre 0 et 5.", "error");
+      return;
+    }
+
+    // Validation du nombre de projets
+    if (formData.projects < 0) {
+      showToast("Le nombre de projets ne peut pas être négatif.", "error");
       return;
     }
 
     setIsLoading(true);
 
-    // Simuler une requête API
     try {
       const response = await createProfile(formData);
       console.log("Données envoyées:", response.data);
       showToast("Profil mis à jour avec succès !");
     } catch (error) {
-      console.error(
-        "Erreur lors de la soumission du formulaire:",
-        error.response?.data?.message || error.message
-      );
-      showToast("Erreur lors de la mise à jour du profil.", "error");
+      console.error("Erreur lors de la soumission du formulaire:", error);
+
+      // Gestion des erreurs spécifiques
+      if (error.response?.data?.message) {
+        showToast(error.response.data.message, "error");
+      } else if (error.response?.status === 400) {
+        showToast("Données invalides. Vérifiez vos informations.", "error");
+      } else if (error.response?.status === 401) {
+        showToast("Session expirée. Veuillez vous reconnecter.", "error");
+      } else {
+        showToast("Erreur lors de la mise à jour du profil.", "error");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -463,7 +520,9 @@ function AddInfo() {
               ) : (
                 formData.technologies.map((tech, index) => (
                   <div
-                    key={`tech-${tech.replace(/\s+/g, '-').toLowerCase()}-${index}`}
+                    key={`tech-${tech
+                      .replace(/\s+/g, "-")
+                      .toLowerCase()}-${index}`}
                     className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-2 rounded-lg border-l-4 border-[#40E0D0] tech-tag animate-slide-in"
                   >
                     <span className="font-medium text-gray-800">{tech}</span>

@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
     setToken(jwtToken);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", jwtToken);
+    localStorage.setItem("userId", userData.id); // Ajouter l'ID utilisateur pour les profils
   };
 
   const logout = () => {
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
   };
 
   return (
