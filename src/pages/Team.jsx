@@ -191,7 +191,7 @@ const TeamSection = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {roles.map((role, index) => (
             <div
-              key={`role-${role.toLowerCase().replace(/\s+/g, '-')}`}
+              key={`role-${role.toLowerCase().replace(/\s+/g, "-")}`}
               className="animate-slide-in"
               style={{ animationDelay: `${0.1 * index}s` }}
             >
@@ -232,21 +232,6 @@ const TeamSection = () => {
             className="inline-flex items-center bg-orange-500 px-8 py-3 rounded-full text-white font-semibold hover:bg-rose-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             Visiter l'équipe
-          </Link>
-        </div>
-
-        {/* Pour ajouter les infos */}
-        <div className="text-center p-6 bg-slate-800 rounded-lg shadow-lg">
-          <p className="mb-4 text-white">
-            Vous appartenez à la team{" "}
-            <span className="text-orange-500 font-semibold">OPPAI</span> ?
-            Ajoutez ou modifiez vos informations !
-          </p>
-          <Link
-            to="/Dashboard"
-            className="inline-block px-6 py-2 bg-pink-300 hover:bg-orange-500 text-white font-semibold rounded-lg transition-colors duration-300"
-          >
-            Ajouter
           </Link>
         </div>
       </div>

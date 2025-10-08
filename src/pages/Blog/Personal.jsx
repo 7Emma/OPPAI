@@ -123,7 +123,7 @@ function Personal() {
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white p-4 text-center">
         <p className="text-xl mb-4">Aucun profil de développeur trouvé.</p>
         <Link
-          to="/dashboard/add-info"
+          to="/Add-info"
           className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
         >
           Créer un profil
@@ -284,7 +284,9 @@ function Personal() {
                     <div className="flex flex-wrap -m-1">
                       {member.technologies.map((tech, index) => (
                         <TechBadge
-                          key={`${member._id}-tech-${tech.replace(/\s+/g, '-').toLowerCase()}-${index}`}
+                          key={`${member._id}-tech-${tech
+                            .replace(/\s+/g, "-")
+                            .toLowerCase()}-${index}`}
                           tech={tech}
                           gradient={member.gradient}
                         />
@@ -348,6 +350,21 @@ function Personal() {
         >
           Démarrer un projet
         </a>
+      </div>
+
+      {/* Pour ajouter les infos */}
+      <div className="text-center p-6 bg-slate-800 rounded-lg shadow-lg">
+        <p className="mb-4 text-white">
+          Vous appartenez à la team{" "}
+          <span className="text-orange-500 font-semibold">OPPAI</span> ? Ajoutez
+          ou modifiez vos informations !
+        </p>
+        <Link
+          to="/Dashboard"
+          className="inline-block px-6 py-2 bg-pink-300 hover:bg-orange-500 text-white font-semibold rounded-lg transition-colors duration-300"
+        >
+          Ajouter
+        </Link>
       </div>
     </div>
   );
